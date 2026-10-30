@@ -1,0 +1,10 @@
+$ npx tsc -b && npx vitest run
+
+ RUN  v5.0.5 /home/tetsuya/development/pocket-terminal/apps/pocket-terminal/frontend
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  21:55:41
+   Duration  1.52s (environment 58%, tests 23%, setup 9%, import 8%, transform 2%, worker 1%)
+

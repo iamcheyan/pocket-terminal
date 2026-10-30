@@ -1,0 +1,121 @@
+## Terminal + SSH evidence — captured on HX90 (NixOS, x86_64) against http://127.0.0.1:8795
+
+### POST /api/terminal/sessions {"shell":"bash","cols":100,"rows":30}
+{
+  "session": {
+    "id": "smvuzadc6_95de094e",
+    "title": "bash shell",
+    "shell": "/run/current-system/sw/bin/bash",
+    "shellId": "bash",
+    "cwd": "",
+    "kind": "local",
+    "tabsGroup": "main",
+    "mock": false,
+    "state": "running",
+    "createdAt": "2026-10-30T12:58:38Z",
+    "rows": 30,
+    "cols": 100,
+    "bytes": 0
+  },
+  "transport": "ws"
+}
+
+### POST /api/terminal/sessions/smvuzadc6_95de094e/input
+body: {"data":"echo POCKET_API_EVIDENCE_$((6*7)); uname -sr; whoami; pwd\n"}
+{"accepted":58}
+
+
+### GET /api/terminal/sessions/smvuzadc6_95de094e/output?offset=0  (ANSI stripped)
+POCKET_API_EVIDENCE_42
+Linux 6.12.108
+tetsuya
+/tmp
+
+hx90@ssh /tmp  v3.13.15  v26.8.1   v1.26.6 at 21:58 
+❯ 
+❯
+
+### POST /api/terminal/sessions/smvuzadc6_95de094e/resize {"cols":132,"rows":40}
+{
+  "session": {
+    "id": "smvuzadc6_95de094e",
+    "title": "bash shell",
+    "shell": "/run/current-system/sw/bin/bash",
+    "shellId": "bash",
+    "cwd": "",
+    "kind": "local",
+    "tabsGroup": "main",
+    "mock": false,
+    "state": "running",
+    "createdAt": "2026-10-30T12:58:38Z",
+    "rows": 40,
+    "cols": 132,
+    "bytes": 683
+  }
+}
+
+### POST /api/terminal/sessions {"shell":"nosuchshell"}  (rejected)
+{"error":{"code":"invalid_request","message":"unknown shell"}}
+
+
+### GET /api/terminal/shells  (daemon-side detection from $SHELL then PATH)
+{
+  "defaultShell": "bash",
+  "shells": [
+    {
+      "id": "bash",
+      "name": "Bash",
+      "path": "/run/current-system/sw/bin/bash",
+      "default": true
+    },
+    {
+      "id": "zsh",
+      "name": "Zsh",
+      "path": "/run/current-system/sw/bin/zsh",
+      "default": false
+    },
+    {
+      "id": "fish",
+      "name": "Fish",
+      "path": "/run/current-system/sw/bin/fish",
+      "default": false
+    },
+    {
+      "id": "sh",
+      "name": "POSIX sh",
+      "path": "/run/current-system/sw/bin/sh",
+      "default": false
+    }
+  ],
+  "userShell": ""
+}
+
+### GET /api/ssh/profiles
+groups: {"Demo": 1, "Lab": 2}
+mockTarget: {"available": true, "host": "127.0.0.1", "note": "loopback fixture; every session it carries is marked mock=true", "port": 45725, "user": "demo"}
+portForwarding: {"note": "Local/remote forwarding is planned; the UI exposes a placeholder so the surface is not silently missing.", "status": "todo", "supported": false}
+  Mock Lab     demo@127.0.0.1:45725 auth=password hasPassword=True hasKey=False mock=True
+  Build Box    dev@build.lan:2222 auth=password hasPassword=False hasKey=False mock=False
+  Edge Router  admin@192.168.50.1:22 auth=key hasPassword=False hasKey=False mock=False
+
+### POST /api/ssh/profiles (credential never echoed back)
+{
+  "profile": {
+    "id": "pmvuzaexd_27ef4887",
+    "name": "Evidence",
+    "group": "Temp",
+    "host": "127.0.0.1",
+    "port": 22,
+    "user": "demo",
+    "authKind": "password",
+    "hasPassword": true,
+    "hasKey": false,
+    "mock": false,
+    "createdAt": "2026-10-30T12:58:40Z",
+    "updatedAt": "2026-10-30T12:58:40Z"
+  }
+}
+
+### DELETE the temporary profile
+{"deleted":"pmvuzaexd_27ef4887"}
+

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"log"
@@ -12,6 +13,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/coder/websocket"
 )
 
 // --- harness -------------------------------------------------------------
@@ -763,5 +766,142 @@ func TestRingBufferResumesAfterDisconnect(t *testing.T) {
 	}
 	if next != ring.Total() {
 		t.Fatalf("next offset: %d vs %d", next, ring.Total())
+	}
+}
+
+func TestParsePlainLineExtractsGoLogTimestamp(t *testing.T) {
+	entry := parsePlainLine("2026/10/30 21:47:51 terminald GET /api/logs 200 3ms")
+	if entry.Time == "" || entry.Time == "now" {
+		t.Fatalf("timestamp not parsed: %+v", entry)
+	}
+	if entry.Message != "terminald GET /api/logs 200 3ms" {
+		t.Fatalf("message still carries the timestamp: %q", entry.Message)
+	}
+	rfc := parsePlainLine("2026-10-30T10:00:00 host app[1]: ERROR boom")
+	if rfc.Level != "error" || rfc.Message != "host app[1]: ERROR boom" {
+		t.Fatalf("rfc3339 line: %+v", rfc)
+	}
+}
+
+func TestLogServiceAllowlistUsesConfiguredDataDir(t *testing.T) {
+	dir := t.TempDir()
+	logs := NewLogService(log.New(io.Discard, "", 0), dir)
+	path := filepath.Join(dir, "logs", "terminald.log")
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatalf("mkdir: %v", err)
+	}
+	if err := os.WriteFile(path, []byte("2026/10/30 21:00:00 terminald booted\n"), 0o600); err != nil {
+		t.Fatalf("write: %v", err)
+	}
+	if _, err := parseLogQueryWithRoots(map[string]string{"source": "file:" + path}, logs.roots); err != nil {
+		t.Fatalf("own log file must be readable: %v", err)
+	}
+	if _, err := parseLogQueryWithRoots(map[string]string{"source": "file:/etc/shadow"}, logs.roots); err == nil {
+		t.Fatal("/etc/shadow must stay unreadable")
+	}
+}
+
+// --- websocket transport ------------------------------------------------
+
+func TestWebSocketSessionRoundTrip(t *testing.T) {
+	_, ts := testServer(t)
+	status, created := doJSON(t, http.MethodPost, ts.URL+"/api/terminal/sessions", map[string]any{"cols": 90, "rows": 24})
+	if status != http.StatusCreated {
+		t.Fatalf("create: %d", status)
+	}
+	id := created["session"].(map[string]any)["id"].(string)
+
+	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	defer cancel()
+	wsURL := "ws" + strings.TrimPrefix(ts.URL, "http") + "/api/terminal/sessions/" + id + "/stream?offset=0"
+	conn, _, err := websocket.Dial(ctx, wsURL, &websocket.DialOptions{
+		HTTPHeader: http.Header{"Origin": []string{"http://127.0.0.1:5178"}},
+	})
+	if err != nil {
+		t.Fatalf("dial: %v", err)
+	}
+	defer conn.CloseNow()
+
+	var output strings.Builder
+	ready := false
+	deadline := time.Now().Add(8 * time.Second)
+	sent := false
+	for time.Now().Before(deadline) {
+		ctxRead, cancelRead := context.WithTimeout(ctx, time.Second)
+		typ, payload, err := conn.Read(ctxRead)
+		cancelRead()
+		if err != nil {
+			break
+		}
+		switch typ {
+		case websocket.MessageText:
+			if strings.Contains(string(payload), `"ready"`) && !sent {
+				ready = true
+				if err := conn.Write(ctx, websocket.MessageBinary, []byte("echo WS_GO_$((9*9))\n")); err != nil {
+					t.Fatalf("write: %v", err)
+				}
+				sent = true
+			}
+		case websocket.MessageBinary:
+			output.Write(payload)
+			if strings.Contains(output.String(), "WS_GO_81") {
+				if !ready {
+					t.Fatal("output arrived before the ready control frame")
+				}
+				return
+			}
+		}
+	}
+	t.Fatalf("did not observe command output; got %q", output.String())
+}
+
+func TestWebSocketRejectsForeignOrigin(t *testing.T) {
+	_, ts := testServer(t)
+	status, created := doJSON(t, http.MethodPost, ts.URL+"/api/terminal/sessions", map[string]any{})
+	if status != http.StatusCreated {
+		t.Fatalf("create: %d", status)
+	}
+	id := created["session"].(map[string]any)["id"].(string)
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
+	wsURL := "ws" + strings.TrimPrefix(ts.URL, "http") + "/api/terminal/sessions/" + id + "/stream"
+	conn, resp, err := websocket.Dial(ctx, wsURL, &websocket.DialOptions{
+		HTTPHeader: http.Header{"Origin": []string{"https://evil.example"}},
+	})
+	if err == nil {
+		_ = conn.CloseNow()
+		t.Fatal("foreign origin must be refused")
+	}
+	if resp == nil || resp.StatusCode != http.StatusForbidden {
+		t.Fatalf("expected 403 for foreign origin, got %+v", resp)
+	}
+}
+
+func TestWebSocketResumesFromOffset(t *testing.T) {
+	srv, ts := testServer(t)
+	session, err := srv.sessions.Create(createRequest{Cols: 80, Rows: 24})
+	if err != nil {
+		t.Fatalf("create: %v", err)
+	}
+	if !waitFor(t, 4*time.Second, func() bool { return session.TotalBytes() > 0 }) {
+		t.Fatal("session produced no banner")
+	}
+	first, cursor := session.Output(0)
+
+	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	defer cancel()
+	wsURL := "ws" + strings.TrimPrefix(ts.URL, "http") + "/api/terminal/sessions/" + session.ID + "/stream?offset=" + itoa(cursor)
+	conn, _, err := websocket.Dial(ctx, wsURL, nil)
+	if err != nil {
+		t.Fatalf("dial: %v", err)
+	}
+	defer conn.CloseNow()
+
+	// Reconnect must not replay the bytes we already had.
+	ctxRead, cancelRead := context.WithTimeout(ctx, 1500*time.Millisecond)
+	typ, payload, readErr := conn.Read(ctxRead)
+	cancelRead()
+	if readErr == nil && typ == websocket.MessageBinary && len(first) > 0 && string(payload) == string(first) {
+		t.Fatal("offset resume replayed already-seen output")
 	}
 }

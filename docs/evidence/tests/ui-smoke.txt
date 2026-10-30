@@ -1,0 +1,52 @@
+· cleared 0 stale sessions
+· desktop dark walk
+  shot desktop-home-dark-1280x800.png
+  shot desktop-terminal-dark-1280x800.png
+  shot desktop-ssh-dark-1280x800.png
+  shot desktop-logs-dark-1280x800.png
+  shot desktop-diagnostics-dark-1280x800.png
+  shot desktop-runtime-dark-1280x800.png
+  shot desktop-actions-dark-1280x800.png
+  shot desktop-settings-dark-1280x800.png
+· desktop light walk
+  shot desktop-home-light-1280x800.png
+  shot desktop-terminal-light-1280x800.png
+  shot desktop-ssh-light-1280x800.png
+  shot desktop-logs-light-1280x800.png
+  shot desktop-diagnostics-light-1280x800.png
+  shot desktop-runtime-light-1280x800.png
+  shot desktop-actions-light-1280x800.png
+  shot desktop-settings-light-1280x800.png
+· e-ink layout
+  shot eink-diagnostics-1280x800.png
+· handheld layout
+  shot phone-home-handheld-dark-390x844.png
+  shot phone-terminal-handheld-dark-390x844.png
+  shot phone-ssh-handheld-dark-390x844.png
+  shot phone-logs-handheld-dark-390x844.png
+  shot phone-diagnostics-handheld-dark-390x844.png
+  shot phone-runtime-handheld-dark-390x844.png
+  shot phone-actions-handheld-dark-390x844.png
+  shot phone-settings-handheld-dark-390x844.png
+  shot phone-home-desktop-layout-dark-390x844.png
+  shot phone-terminal-desktop-layout-dark-390x844.png
+  shot phone-ssh-desktop-layout-dark-390x844.png
+  shot phone-logs-desktop-layout-dark-390x844.png
+  shot phone-diagnostics-desktop-layout-dark-390x844.png
+  shot phone-runtime-desktop-layout-dark-390x844.png
+  shot phone-actions-desktop-layout-dark-390x844.png
+  shot phone-settings-desktop-layout-dark-390x844.png
+· terminal round-trip
+  terminal output confirmed: hx90@ssh /tmp  v3.13.15  v26.8.1   v1.26.6 at 21:57 ❯ echo POCKET_UI_SMOKE_$((6*7)); uname -sr; whoamiPOCKET_UI_SMOKE_42Linux 6.12.108tetsuya[WARN] - (starship::context): Scanning current directory timed out.[WARN] - (starship::context): You can set scan_timeout in your config to a higher value to allow longer-running scans to keep executing.hx90@ssh /tmp  v3.13.15  v26.8.1  v1.26.6 at 21:57 ❯  
+  shot terminal-live-command-1280x800.png
+  shot terminal-split-1280x800.png
+· ssh mock flow
+  shot ssh-profiles-1280x800.png
+  shot ssh-tofu-dialog-1280x800.png
+  ssh output confirmed
+  shot ssh-connected-1280x800.png
+· palette + dpad
+  shot palette-1280x800.png
+  shot dpad-focus-ring-1280x800.png
+
+OK: no console errors, no horizontal overflow, terminal + ssh round-trips verified

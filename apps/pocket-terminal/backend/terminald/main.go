@@ -125,7 +125,7 @@ func newServer(cfg config, logger *log.Logger) (*server, error) {
 	}
 	s.sessions = NewSessionManager(cfg.maxSessions, cfg.idleTimeout, cfg.keepExited, logger)
 	s.diag = NewDiagnostics()
-	s.logs = NewLogService(logger)
+	s.logs = NewLogService(logger, cfg.dataDir)
 	s.runtime = NewRuntimeInspector(s.startedAt)
 	s.actions = NewActionService(s)
 	s.ssh = NewSSHManager(s)
@@ -243,7 +243,16 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lmsgprefix)
+	// The daemon mirrors its own log to <data>/logs/terminald.log so the Logs
+	// page can tail it as a real file source alongside journald.
+	logWriter := io.Writer(os.Stdout)
+	if err := os.MkdirAll(filepath.Join(cfg.dataDir, "logs"), 0o700); err == nil {
+		if file, err := os.OpenFile(filepath.Join(cfg.dataDir, "logs", "terminald.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o600); err == nil {
+			logWriter = io.MultiWriter(os.Stdout, file)
+			defer func() { _ = file.Close() }()
+		}
+	}
+	logger := log.New(logWriter, "", log.LstdFlags|log.Lmsgprefix)
 	logger.SetPrefix("terminald ")
 	srv, err := newServer(cfg, logger)
 	if err != nil {

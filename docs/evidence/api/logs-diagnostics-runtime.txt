@@ -1,0 +1,250 @@
+## Logs, diagnostics, runtime, actions evidence — captured 2026-10-30T21:46:52+09:00
+
+### GET /api/logs/sources
+{
+    "levels": [
+        "emerg",
+        "alert",
+        "crit",
+        "error",
+        "warning",
+        "notice",
+        "info",
+        "debug"
+    ],
+    "sources": [
+        {
+            "id": "journald",
+            "kind": "journal",
+            "label": "systemd journal",
+            "description": "Structured host logs via journalctl (read-only).",
+            "available": true
+        }
+    ]
+}
+
+### GET /api/logs?source=journald&limit=5
+{
+    "count": 5,
+    "durationMs": 16,
+    "entries": [
+        {
+            "id": "2065af4709f20851",
+            "time": "2026-10-30T12:46:52Z",
+            "level": "info",
+            "unit": "tailscaled.service",
+            "message": "ssh-session(sess-20261030T124651-6b8a54c908): Wait: code=255",
+            "metadata": {
+                "SYSLOG_IDENTIFIER": "tailscaled",
+                "_HOSTNAME": "hx90",
+                "_PID": "2363"
+            }
+        },
+        {
+            "id": "78e0ad8ef9f6d78b",
+            "time": "2026-10-30T12:46:52Z",
+            "level": "info",
+            "unit": "init.scope",
+            "message": "session-c686798.scope: Deactivated successfully.",
+            "metadata": {
+                "SYSLOG_IDENTIFIER": "systemd",
+                "_HOSTNAME": "hx90",
+                "_PID": "1"
+            }
+        },
+        {
+            "id": "7b0b84029c8a61d6",
+            "time": "2026-10-30T12:46:52Z",
+            "level": "info",
+            "unit": "init.scope",
+            "message": "session-c686798.scope: Consumed 17ms CPU time over 18ms wall clock time, 2.7M memory peak, 730B incoming IP traffic, 836B outgoing IP traffic.",
+            "metadata": {
+                "SYSLOG_IDENTIFIER": "systemd",
+                "_HOSTNAME": "hx90",
+                "_PID": "1"
+            }
+        },
+        {
+            "id": "9edb548a23cf33ac",
+            "time": "2026-10-30T12:46:52Z",
+            "level": "info",
+            "unit": "systemd-logind.service",
+            "message": "Session c686798 logged out. Waiting for processes to exit.",
+            "metadata": {
+                "SYSLOG_IDENTIFIER": "systemd-logind",
+                "_HOSTNAME": "hx90",
+                "_PID": "1009"
+
+### GET /api/logs?source=journald&level=error&limit=3
+count 0
+
+### GET /api/logs?source=file:/etc/shadow  (allowlist refusal)
+{"error":{"code":"invalid_query","message":"log file is outside the allowlist"}}
+
+HTTP 400
+
+### POST /api/logs/export (headers)
+HTTP/1.1 200 OK
+Content-Disposition: attachment; filename="pocket-terminal-journald-20261030-214652.log"
+Content-Type: text/plain; charset=utf-8
+Referrer-Policy: no-referrer
+X-Content-Type-Options: nosniff
+Date: Fri, 30 Oct 2026 12:46:52 GMT
+--- body head
+# Pocket Terminal log export
+# source=journald unit= level= query=
+# exported=2026-10-30T12:46:52Z entries=5
+2026-10-30T12:46:52Z INFO    tailscaled.service ssh-session(sess-20261030T124651-6b8a54c908): Wait: code=255
+
+### GET /api/diagnostics
+{
+    "generatedAt": "2026-10-30T12:46:52Z",
+    "host": {
+        "arch": "amd64",
+        "bootTime": "2026-10-26T21:34:11Z",
+        "goVersion": "go1.26.6",
+        "hostname": "hx90",
+        "kernel": "6.12.108",
+        "numCPU": 16,
+        "os": "NixOS 26.05 (Yarara)"
+    },
+    "cpu": [
+        {
+            "label": "CPU usage",
+            "value": 0,
+            "unit": "%",
+            "detail": "load 2.04"
+        },
+        {
+            "label": "Cores",
+            "value": 16,
+            "unit": "cores"
+        },
+        {
+            "label": "Processes",
+            "value": 727,
+            "unit": "procs"
+        },
+        {
+            "label": "Load 1m",
+            "value": 2.04,
+            "unit": ""
+        },
+        {
+            "label": "Load 5m",
+            "value": 5.07,
+            "unit": ""
+        },
+        {
+            "label": "Load 15m",
+            "value": 5.69,
+            "unit": ""
+        }
+    ],
+    "memory": [
+        {
+            "label": "Memory used",
+            "value": 25593360384,
+            "unit": "B",
+            "detail": "23.8 GiB of 62.2 GiB",
+            "percent": 38.3
+        },
+        {
+            "label": "Swap used",
+            "value": 28303638528,
+            "unit": "B",
+            "detail": "26.4 GiB of 99.6 GiB",
+            "percent": 26.5
+        }
+    ],
+    "disks": [
+        {
+            "mount": "/",
+            "aliases": [
+                "/home",
+                "/tmp",
+                "/var"
+            ],
+            "totalBytes": 925635481600,
+            "usedBytes": 754877079552,
+            "freeBytes": 170758402048,
+            "usedPct": 81.6
+        },
+        {
+            "mount": "/run/media",
+            "totalBytes": 16703938560,
+            "usedBytes": 6295552,
+            "freeBytes": 16697643008,
+            "usedPct": 0
+        },
+
+### GET /api/runtime
+daemon: {"addr": "127.0.0.1:8795", "gcCycles": 0, "goroutines": 8, "heapAllocBytes": 1564680, "name": "terminald", "pid": 1663458, "startedAt": "2026-10-30T12:46:38Z", "sysBytes": 13064456, "uptime": "14s", "version": "0.1.0"}
+go: {"arch": "amd64", "numCPU": 16, "os": "linux", "version": "go1.26.6"}
+bridges: [('launcherd', False, 0), ('filesd', True, 0), ('settingsd', False, 0), ('terminald', True, 0)]
+apps: [('pocket-files', False), ('pocket-galaxy', True), ('pocket-gamehub', False), ('pocket-launcher', False), ('pocket-music', False), ('pocket-reader', False), ('pocket-settings', False), ('pocket-terminal', False)]
+roots: ['/home/tetsuya/development']
+
+### GET /api/actions
+controlEnabled False
+  system.info | preview |dangerous False
+  system.uptime | preview |dangerous False
+  terminal.newShell | native |dangerous False
+  terminal.killAll | native |dangerous True
+  logs.journalErrors | preview |dangerous False
+  network.ports | command |dangerous False
+  services.restart.terminald | systemctl |dangerous True
+  services.restart.launcherd | systemctl |dangerous True
+  power.reboot | systemctl |dangerous True
+
+### POST /api/actions/terminal.killAll {} (dangerous, unconfirmed)
+{"result":{"actionId":"terminal.killAll","executed":false,"confirmed":false,"refusal":"confirmation_required","durationMs":0}}
+
+HTTP 409
+
+### POST /api/actions/system.uptime {} (preview)
+{
+    "result": {
+        "actionId": "system.uptime",
+        "executed": true,
+        "confirmed": false,
+        "durationMs": 2,
+        "preview": {
+            "load": [
+                2.04,
+                5.07,
+                5.69
+            ],
+            "processes": 727,
+            "uptimeSeconds": 313961.75
+        }
+    }
+}
+
+### POST /api/actions/power.reboot {confirm:true} (control disabled)
+{
+    "result": {
+        "actionId": "power.reboot",
+        "executed": false,
+        "confirmed": true,
+        "refusal": "system_control_disabled",
+        "durationMs": 0
+    }
+}
+
+### GET /api/security
+{
+    "allowSystemControl": false,
+    "authTokenRequired": false,
+    "bindAddr": "127.0.0.1:8795",
+    "knownHosts": 0,
+    "plaintextSecrets": false,
+    "secretStore": {
+        "keyFile": "secret.key",
+        "keyMode": "0600",
+        "keyring": false,
+        "keyringNote": "system keyring (secret-tool) provider is a documented follow-up; file key is never logged or returned",
+        "plaintextSecrets": false,
+        "provider": "aes-256-gcm-file"
+    }
+}

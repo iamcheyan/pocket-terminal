@@ -23,12 +23,21 @@ import (
 type LogService struct {
 	logger  *log.Logger
 	journal bool
+	dataDir string
+	roots   []string
 	mu      sync.Mutex
 }
 
-func NewLogService(logger *log.Logger) *LogService {
+func NewLogService(logger *log.Logger, dataDir string) *LogService {
 	_, err := exec.LookPath("journalctl")
-	return &LogService{logger: logger, journal: err == nil}
+	return &LogService{
+		logger: logger, journal: err == nil, dataDir: dataDir,
+		roots: []string{
+			"/var/log",
+			filepath.Join(os.Getenv("HOME"), ".local", "state"),
+			filepath.Join(dataDir, "logs"),
+		},
+	}
 }
 
 func (l *LogService) JournaldAvailable() bool { return l.journal }
@@ -63,6 +72,7 @@ func (l *LogService) Sources() []LogSource {
 		"/var/log/messages", "/var/log/syslog", "/var/log/auth.log", "/var/log/kern.log",
 		"/var/log/daemon.log", "/var/log/pacman.log", "/var/log/Xorg.0.log",
 		filepath.Join(os.Getenv("HOME"), ".local/state/terminald/terminald.log"),
+		filepath.Join(l.dataDir, "logs", "terminald.log"),
 	}
 	for _, path := range candidates {
 		info, err := os.Stat(path)
@@ -95,6 +105,19 @@ type logQuery struct {
 }
 
 func parseLogQuery(values map[string]string) (logQuery, error) {
+	return parseLogQueryWithRoots(values, defaultLogRoots())
+}
+
+// defaultLogRoots is used by tests and any caller without a configured daemon.
+func defaultLogRoots() []string {
+	return []string{
+		"/var/log",
+		filepath.Join(os.Getenv("HOME"), ".local", "state"),
+		filepath.Join(defaultDataDir(), "logs"),
+	}
+}
+
+func parseLogQueryWithRoots(values map[string]string, roots []string) (logQuery, error) {
 	q := logQuery{
 		Source:   firstNonEmpty(values["source"], "journald"),
 		Unit:     values["unit"],
@@ -105,7 +128,7 @@ func parseLogQuery(values map[string]string) (logQuery, error) {
 	}
 	if strings.HasPrefix(q.Source, "file:") {
 		path := strings.TrimPrefix(q.Source, "file:")
-		if !logFileAllowed(path) {
+		if !logFileAllowedIn(path, roots) {
 			return q, fmt.Errorf("log file is outside the allowlist")
 		}
 	} else if q.Source != "journald" {
@@ -119,11 +142,14 @@ func parseLogQuery(values map[string]string) (logQuery, error) {
 	return q, nil
 }
 
-// logFileAllowed keeps the file-backed source to predictable locations so the
+// logFileAllowedIn keeps the file-backed source to predictable locations so the
 // API cannot be used as an arbitrary file reader.
 func logFileAllowed(path string) bool {
+	return logFileAllowedIn(path, defaultLogRoots())
+}
+
+func logFileAllowedIn(path string, roots []string) bool {
 	clean := filepath.Clean(path)
-	roots := []string{"/var/log", filepath.Join(os.Getenv("HOME"), ".local/state"), filepath.Join(defaultDataDir(), "logs")}
 	for _, root := range roots {
 		if strings.HasPrefix(clean, root+string(os.PathSeparator)) {
 			return true
@@ -291,13 +317,32 @@ func queryFileLog(ctx context.Context, path string, q logQuery) ([]LogEntry, err
 
 var levelPattern = regexp.MustCompile(`(?i)\b(emerg|alert|crit|error|err|warn|warning|notice|debug|info)\b`)
 
+// plainLineLayouts are the timestamp prefixes this daemon understands. Go's
+// own log output (the terminald self-log) comes first so its rows do not
+// repeat the timestamp inside the message.
+var plainLineLayouts = []struct {
+	length int
+	parse  func(string) (time.Time, error)
+}{
+	{19, func(raw string) (time.Time, error) { return time.Parse("2006/01/02 15:04:05", raw) }},
+	{20, func(raw string) (time.Time, error) { return time.Parse("2006-01-02T15:04:05Z", raw) }},
+	{19, func(raw string) (time.Time, error) { return time.Parse("2006-01-02T15:04:05", raw) }},
+	{15, func(raw string) (time.Time, error) { return time.Parse("Jan _2 15:04:05", raw) }},
+}
+
 func parsePlainLine(line string) LogEntry {
 	entry := LogEntry{Message: line, Level: "info"}
-	if len(line) >= 19 {
-		if _, err := time.Parse("2006-01-02T15:04:05", line[:19]); err == nil {
-			entry.Time = line[:19] + "Z"
-			entry.Message = strings.TrimSpace(line[19:])
+	for _, layout := range plainLineLayouts {
+		if len(line) < layout.length {
+			continue
 		}
+		parsed, err := layout.parse(line[:layout.length])
+		if err != nil {
+			continue
+		}
+		entry.Time = parsed.UTC().Format(time.RFC3339)
+		entry.Message = strings.TrimSpace(line[layout.length:])
+		break
 	}
 	if match := levelPattern.FindStringSubmatch(line); match != nil {
 		entry.Level = normalizeLevel(match[1])
@@ -349,7 +394,7 @@ func (s *server) handleLogQuery(w http.ResponseWriter, r *http.Request) {
 	for key := range r.URL.Query() {
 		values[key] = r.URL.Query().Get(key)
 	}
-	q, err := parseLogQuery(values)
+	q, err := parseLogQueryWithRoots(values, s.logs.roots)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_query", err.Error())
 		return
@@ -373,7 +418,7 @@ func (s *server) handleLogStream(w http.ResponseWriter, r *http.Request) {
 	for key := range r.URL.Query() {
 		values[key] = r.URL.Query().Get(key)
 	}
-	q, err := parseLogQuery(values)
+	q, err := parseLogQueryWithRoots(values, s.logs.roots)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_query", err.Error())
 		return
@@ -453,10 +498,10 @@ func (s *server) handleLogExport(w http.ResponseWriter, r *http.Request) {
 	if !decodeBody(w, r, &req) {
 		return
 	}
-	q, err := parseLogQuery(map[string]string{
+	q, err := parseLogQueryWithRoots(map[string]string{
 		"source": req.Source, "unit": req.Unit, "priority": req.Priority,
 		"q": req.Query, "level": req.Level, "limit": firstNonEmpty(req.Limit, "2000"),
-	})
+	}, s.logs.roots)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_query", err.Error())
 		return

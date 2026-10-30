@@ -286,6 +286,7 @@ func profileDTO(rec ProfileRecord) ProfileDTO {
 // and two clearly-labelled placeholders.
 func (m *SSHManager) seedProfiles() {
 	if len(m.srv.store.Profiles()) > 0 {
+		m.refreshMockProfile()
 		return
 	}
 	records := []profileInput{
@@ -296,6 +297,32 @@ func (m *SSHManager) seedProfiles() {
 	for _, rec := range records {
 		if _, err := m.createProfile(rec); err != nil {
 			m.srv.logger.Printf("seed profile: %v", err)
+		}
+	}
+}
+
+// refreshMockProfile keeps the bundled fixture's advertised port current: the
+// loopback listener picks an ephemeral port on every daemon start.
+func (m *SSHManager) refreshMockProfile() {
+	port := m.MockPort()
+	if port == 0 {
+		return
+	}
+	for _, rec := range m.srv.store.Profiles() {
+		if !rec.Mock || rec.Port == port {
+			continue
+		}
+		staleID := hostID(rec.Host, rec.Port)
+		rec.Port = port
+		if _, err := m.srv.store.UpsertProfile(rec); err != nil {
+			m.srv.logger.Printf("refresh mock profile: %v", err)
+			continue
+		}
+		// The fixture mints a new host key per daemon start, so its previous
+		// trust entry can never match again. Drop it rather than leave a
+		// permanently stale fingerprint in the trust store.
+		if err := m.srv.store.DeleteKnownHost(staleID); err == nil {
+			m.srv.logger.Printf("pruned stale mock known-host %s", staleID)
 		}
 	}
 }
@@ -663,23 +690,27 @@ func (m *SSHManager) dial(rec ProfileRecord, acceptHostKey bool, fingerprint str
 	outcome := dialOutcome{host: rec.Host, port: rec.Port}
 	var decisionErr error
 
+	// Trust is keyed by the address the user configured, not the address the
+	// daemon dialled: the mock fixture binds an ephemeral port that changes on
+	// every restart, and a profile's identity must survive that.
+	trustHost, trustPort := rec.Host, rec.Port
 	hostKeyCallback := func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 		fp := sshFingerprint(key.Marshal())
 		outcome.fingerprint = fp
 		outcome.keyType = key.Type()
-		known, exists := m.srv.store.KnownHost(hostID(target.Host, target.Port))
+		known, exists := m.srv.store.KnownHost(hostID(trustHost, trustPort))
 		switch {
 		case !exists:
 			outcome.hostKeyState = "unknown"
 			if acceptHostKey && (fingerprint == "" || fingerprint == fp) {
-				if err := m.trustHost(target.Host, target.Port, key, fp, rec.Mock); err != nil {
+				if err := m.trustHost(trustHost, trustPort, key, fp, rec.Mock); err != nil {
 					decisionErr = err
 					return err
 				}
 				outcome.hostKeyState = "trusted"
 				return nil
 			}
-			m.rememberPending(target.Host, target.Port, key, fp)
+			m.rememberPending(trustHost, trustPort, key, fp)
 			decisionErr = errHostKeyUnknown
 			return errHostKeyUnknown
 		case known.Fingerprint != fp:

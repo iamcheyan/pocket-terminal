@@ -368,6 +368,9 @@ const TerminalPage = ({
         return;
       }
       actionsFor(focusPane)?.send(text);
+      // Return focus to xterm: the toolbar button stole it, and the next
+      // keystroke (Enter) must reach the PTY, not the toolbar.
+      actionsFor(focusPane)?.focus();
       notify(`Pasted ${text.length} characters`, 'good');
     } catch {
       notify('Clipboard read blocked by the browser', 'error');

@@ -1,0 +1,103 @@
+## curl evidence — captured 2026-10-30T21:44:26+09:00 from http://127.0.0.1:8795
+
+### GET /api/health
+{
+    "dataStore": "json-file",
+    "mock": true,
+    "service": "terminald",
+    "sessions": 2,
+    "status": "ok",
+    "time": "2026-10-30T21:44:26+09:00",
+    "uptime": "6m13s",
+    "version": "0.1.0"
+}
+
+### GET /api/meta
+{
+    "capabilities": {
+        "diagnostics": true,
+        "fileLogs": true,
+        "journald": true,
+        "mockSSH": true,
+        "pty": true,
+        "quickActions": true,
+        "runtime": true,
+        "ssh": true,
+        "systemControl": false,
+        "terminalEmulator": "xterm.js (client-side rendering)"
+    },
+    "defaultShell": "bash",
+    "limits": {
+        "idleTimeout": 1800000000000,
+        "maxSessions": 8,
+        "secrets": {
+            "keyFile": "secret.key",
+            "keyMode": "0600",
+            "keyring": false,
+            "keyringNote": "system keyring (secret-tool) provider is a documented follow-up; file key is never logged or returned",
+            "plaintextSecrets": false,
+            "provider": "aes-256-gcm-file"
+        }
+    },
+    "service": "terminald",
+    "shells": [
+        {
+            "id": "bash",
+            "name": "Bash",
+            "path": "/run/current-system/sw/bin/bash",
+            "default": true
+        },
+        {
+            "id": "zsh",
+            "name": "Zsh",
+            "path": "/run/current-system/sw/bin/zsh",
+            "default": false
+        },
+        {
+            "id": "fish",
+            "name": "Fish",
+            "path": "/run/current-system/sw/bin/fish",
+            "default": false
+        },
+        {
+            "id": "sh",
+            "name": "POSIX sh",
+            "path": "/run/current-system/sw/bin/sh",
+            "default": false
+        }
+    ],
+    "startedAt": "2026-10-30T21:38:13+09:00",
+    "version": "0.1.0"
+}
+
+### GET /api/terminal/shells
+{
+    "defaultShell": "bash",
+    "shells": [
+        {
+            "id": "bash",
+            "name": "Bash",
+            "path": "/run/current-system/sw/bin/bash",
+            "default": true
+        },
+        {
+            "id": "zsh",
+            "name": "Zsh",
+            "path": "/run/current-system/sw/bin/zsh",
+            "default": false
+        },
+        {
+            "id": "fish",
+            "name": "Fish",
+            "path": "/run/current-system/sw/bin/fish",
+            "default": false
+        },
+        {
+            "id": "sh",
+            "name": "POSIX sh",
+            "path": "/run/current-system/sw/bin/sh",
+            "default": false
+        }
+    ],
+    "userShell": ""
+}

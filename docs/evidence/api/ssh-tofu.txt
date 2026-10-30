@@ -1,0 +1,80 @@
+## SSH TOFU + credential-at-rest evidence — captured 2026-10-30T21:45:51+09:00
+profile id: pmvuytmd6_d20b200b
+
+### POST /api/ssh/profiles/<id>/test  (pre-flight probe; key not trusted yet)
+{
+    "result": {
+        "reachable": true,
+        "authenticated": false,
+        "hostKeyState": "unknown",
+        "fingerprint": "SHA256:WjGBQyqL8aqz7vXB0WC9KQbSf2mTSMZMm+yJ2/A3Z/A",
+        "mock": true,
+        "latencyMs": 1,
+        "message": "host key is not yet trusted"
+    }
+}
+
+### POST /api/ssh/profiles/<id>/connect {}  → TOFU challenge (HTTP 409)
+{"error":{"code":"host_key_unknown","message":"host key is not trusted yet","details":{"fingerprint":"SHA256:WjGBQyqL8aqz7vXB0WC9KQbSf2mTSMZMm+yJ2/A3Z/A","host":"127.0.0.1","keyType":"ssh-ed25519","mock":true,"port":45921}}}
+
+HTTP 409
+
+### trust store is still empty before the user confirms
+{"knownHosts":[]}
+
+### POST connect {acceptHostKey:true, fingerprint:<shown>} → live session
+{
+    "session": {
+        "id": "smvuytxl5_b4251dd5",
+        "title": "Mock Lab",
+        "shell": "ssh demo@127.0.0.1",
+        "shellId": "ssh",
+        "cwd": "",
+        "kind": "ssh",
+        "tabsGroup": "main",
+        "profileId": "pmvuytmd6_d20b200b",
+        "mock": true,
+        "state": "running",
+        "createdAt": "2026-10-30T12:45:51Z",
+        "rows": 30,
+        "cols": 100,
+        "bytes": 0
+    }
+}
+
+### POST input: echo SSH_EVIDENCE_$((11*11)); hostname
+{"accepted":39}
+
+### GET output (ANSI stripped)
+❯ ❯ echo SSH_EVIDENCE_$((11*11)); hostname
+SSH_EVIDENCE_121
+hx90
+
+hx90@ssh /tmp  v3.13.15  v26.8.1   v1.26.6 at 21:45 
+❯ ❯ 
+### GET /api/ssh/known-hosts after confirmation (keyed by the profile address)
+{
+    "knownHosts": [
+        {
+            "id": "127.0.0.1:45921",
+            "host": "127.0.0.1",
+            "port": 45921,
+            "keyType": "ssh-ed25519",
+            "fingerprint": "SHA256:WjGBQyqL8aqz7vXB0WC9KQbSf2mTSMZMm+yJ2/A3Z/A",
+            "addedAt": "2026-10-30T12:45:51Z",
+            "mock": true
+        }
+    ]
+}
+
+### POST connect again: no second prompt
+HTTP 201
+
+### credential at rest: <data>/state.json holds ciphertext only
+Mock Lab     passwordCipher=+atfosrpT4iiMjNCAq… len=48 keyCipher=(none)
+Edge Router  passwordCipher=(none) len=0 keyCipher=(none)
+Build Box    passwordCipher=(none) len=0 keyCipher=(none)
+
+### file modes
+600 /tmp/pt-data/state.json
+600 /tmp/pt-data/secret.key
