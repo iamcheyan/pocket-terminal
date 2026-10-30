@@ -8,7 +8,7 @@ $ go vet ./... && go test ./...
 === RUN   TestSecretKeyFileIsOwnerOnly
 --- PASS: TestSecretKeyFileIsOwnerOnly (0.00s)
 === RUN   TestStorePersistsProfilesWithoutSecrets
---- PASS: TestStorePersistsProfilesWithoutSecrets (0.01s)
+--- PASS: TestStorePersistsProfilesWithoutSecrets (0.00s)
 === RUN   TestStoreKnownHosts
 --- PASS: TestStoreKnownHosts (0.00s)
 === RUN   TestDetectShellsFindsWorkingShell
@@ -16,37 +16,37 @@ $ go vet ./... && go test ./...
 === RUN   TestDetectShellsIgnoresMissingUserShell
 --- PASS: TestDetectShellsIgnoresMissingUserShell (0.00s)
 === RUN   TestHealthAndMeta
---- PASS: TestHealthAndMeta (0.02s)
+--- PASS: TestHealthAndMeta (0.01s)
 === RUN   TestTerminalSessionExecutesCommand
---- PASS: TestTerminalSessionExecutesCommand (2.52s)
+--- PASS: TestTerminalSessionExecutesCommand (2.18s)
 === RUN   TestTerminalRejectsUnknownShellAndInvalidCwd
---- PASS: TestTerminalRejectsUnknownShellAndInvalidCwd (0.01s)
+--- PASS: TestTerminalRejectsUnknownShellAndInvalidCwd (0.00s)
 === RUN   TestTerminalSessionLimit
---- PASS: TestTerminalSessionLimit (8.03s)
+--- PASS: TestTerminalSessionLimit (8.01s)
 === RUN   TestSSHProfileCRUDNeverStoresPlaintext
 --- PASS: TestSSHProfileCRUDNeverStoresPlaintext (0.01s)
 === RUN   TestSSHMockConnectTOFUFlow
---- PASS: TestSSHMockConnectTOFUFlow (2.53s)
+--- PASS: TestSSHMockConnectTOFUFlow (2.16s)
 === RUN   TestSSHRejectsWrongPassword
---- PASS: TestSSHRejectsWrongPassword (0.02s)
+--- PASS: TestSSHRejectsWrongPassword (0.01s)
 === RUN   TestSSHHostKeyMismatchIsRefused
---- PASS: TestSSHHostKeyMismatchIsRefused (2.02s)
+--- PASS: TestSSHHostKeyMismatchIsRefused (2.01s)
 === RUN   TestLogsSurfaceAndValidation
---- PASS: TestLogsSurfaceAndValidation (0.01s)
+--- PASS: TestLogsSurfaceAndValidation (0.00s)
 === RUN   TestFileLogTailAndFilter
 --- PASS: TestFileLogTailAndFilter (0.00s)
 === RUN   TestLogFileAllowlist
 --- PASS: TestLogFileAllowlist (0.00s)
 === RUN   TestDiagnosticsPayloadShape
---- PASS: TestDiagnosticsPayloadShape (0.03s)
+--- PASS: TestDiagnosticsPayloadShape (0.01s)
 === RUN   TestRuntimeReport
---- PASS: TestRuntimeReport (0.01s)
+--- PASS: TestRuntimeReport (0.00s)
 === RUN   TestActionConfirmationPolicy
 --- PASS: TestActionConfirmationPolicy (0.01s)
 === RUN   TestSecurityReport
---- PASS: TestSecurityReport (0.01s)
+--- PASS: TestSecurityReport (0.00s)
 === RUN   TestBearerTokenGate
---- PASS: TestBearerTokenGate (0.01s)
+--- PASS: TestBearerTokenGate (0.00s)
 === RUN   TestSSHFingerprintFormat
 --- PASS: TestSSHFingerprintFormat (0.00s)
 === RUN   TestHostIDHandlesIPv6
@@ -62,10 +62,10 @@ $ go vet ./... && go test ./...
 === RUN   TestLogServiceAllowlistUsesConfiguredDataDir
 --- PASS: TestLogServiceAllowlistUsesConfiguredDataDir (0.00s)
 === RUN   TestWebSocketSessionRoundTrip
---- PASS: TestWebSocketSessionRoundTrip (2.45s)
+--- PASS: TestWebSocketSessionRoundTrip (2.16s)
 === RUN   TestWebSocketRejectsForeignOrigin
 --- PASS: TestWebSocketRejectsForeignOrigin (2.01s)
 === RUN   TestWebSocketResumesFromOffset
---- PASS: TestWebSocketResumesFromOffset (2.46s)
+--- PASS: TestWebSocketResumesFromOffset (2.18s)
 PASS
-ok  	pocket-terminal/terminald	22.194s
+ok  	pocket-terminal/terminald	20.778s

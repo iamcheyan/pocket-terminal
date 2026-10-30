@@ -5,6 +5,6 @@ $ npx tsc -b && npx vitest run
 
  Test Files  5 passed (5)
       Tests  30 passed (30)
-   Start at  21:55:41
-   Duration  1.52s (environment 58%, tests 23%, setup 9%, import 8%, transform 2%, worker 1%)
+   Start at  22:11:06
+   Duration  1.35s (environment 57%, tests 24%, setup 9%, import 8%, transform 2%, worker 1%)
 

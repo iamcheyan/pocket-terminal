@@ -167,9 +167,9 @@ const HomePage = ({onNavigate, onQuickShell, notify}: HomePageProps) => {
         <div style={{marginTop: 10}}>
           <Card eyebrow="mock fixture" title="Loopback SSH target" action={<Plug size={13} />}>
             <div className="hint">
-              {bundle.mockTarget.note} Connect with <code>{bundle.mockTarget.user}</code> to{' '}
-              <code>{bundle.mockTarget.host}:{bundle.mockTarget.port}</code>. Sessions opened through it are labelled{' '}
-              <code>mock=true</code> in the terminal status bar.
+              {bundle.mockTarget.note.charAt(0).toUpperCase() + bundle.mockTarget.note.slice(1)}. Connect with{' '}
+              <code>{bundle.mockTarget.user}</code> to <code>{bundle.mockTarget.host}:{bundle.mockTarget.port}</code>.
+              Sessions opened through it are labelled <code>mock=true</code> in the terminal status bar.
             </div>
           </Card>
         </div>

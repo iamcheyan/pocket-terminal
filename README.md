@@ -24,6 +24,13 @@ terminald (Go)
 ## Run it
 
 ```sh
+./scripts/dev.sh          # builds terminald, starts it, serves the UI
+# → http://127.0.0.1:5178  (Ctrl+C stops both)
+```
+
+`make dev` is the same thing. Manual equivalent:
+
+```sh
 # 1. backend (loopback, no root needed)
 cd apps/pocket-terminal/backend/terminald
 go run .                       # http://127.0.0.1:8795
@@ -34,12 +41,8 @@ npm install
 npm run dev -- --host 127.0.0.1 --port 5178   # http://127.0.0.1:5178
 ```
 
-Or from the repo root:
-
-```sh
-make backend     # terminald on 127.0.0.1:8795
-make test        # go vet + go test + tsc + vitest
-```
+Other root targets: `make test` (go vet + go test + tsc + vitest),
+`make ui-smoke`, `make build`.
 
 Open <http://127.0.0.1:5178>. The first local shell is one click (or `Ctrl/⌘+K` →
 “New local shell”). The seeded **Mock Lab** SSH profile connects to a loopback sshd
@@ -96,6 +99,10 @@ The smoke run drives Chromium against the real daemon: it types into the termina
 connects the mock SSH profile through the TOFU dialog, opens the palette with
 `Ctrl+K` and walks the D-Pad focus ring, asserting no console error, no failed
 request and no horizontal overflow at 1280×800 and 390×844.
+
+`./scripts/evidence.sh` regenerates the `curl` transcripts under
+`docs/evidence/api/`; `node scripts/screenshots.mjs` regenerates the layout/theme
+matrix.
 
 ## Limits
 

@@ -93,18 +93,25 @@ const gotoPage = async (page, id) => {
   await page.waitForTimeout(320);
 };
 
-/** The daemon caps sessions; a previous run must not starve this one. */
-const resetSessions = async () => {
+/**
+ * The daemon caps sessions and remembers trusted host keys, so a previous run
+ * must not starve this one or pre-accept the TOFU prompt under test.
+ */
+const resetState = async () => {
   const api = process.env.POCKET_TERMINAL_API ?? 'http://127.0.0.1:8795';
   const list = await (await fetch(`${api}/api/terminal/sessions`)).json();
   for (const session of list.sessions ?? []) {
     await fetch(`${api}/api/terminal/sessions/${session.id}`, {method: 'DELETE'});
   }
-  console.log(`· cleared ${list.sessions?.length ?? 0} stale sessions`);
+  const hosts = await (await fetch(`${api}/api/ssh/known-hosts`)).json();
+  for (const host of hosts.knownHosts ?? []) {
+    await fetch(`${api}/api/ssh/known-hosts/${encodeURIComponent(host.id)}`, {method: 'DELETE'});
+  }
+  console.log(`· cleared ${list.sessions?.length ?? 0} sessions, ${hosts.knownHosts?.length ?? 0} known hosts`);
 };
 
 const main = async () => {
-  await resetSessions();
+  await resetState();
   const browser = await chromium.launch({
     executablePath: EXECUTABLE,
     args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars'],
@@ -136,10 +143,11 @@ const main = async () => {
   await page.goto(`${BASE}/`, {waitUntil: 'networkidle'});
   await page.waitForTimeout(400);
 
+  // Page-level screenshots are owned by scripts/screenshots.mjs; this run
+  // asserts geometry and captures the workflow evidence only.
   for (const id of PAGES) {
     await gotoPage(page, id);
     await checkOverflow(page, `desktop/${id}`);
-    await shoot(page, `desktop-${id}-dark-1280x800`);
   }
 
   // Light theme sweep.
@@ -148,7 +156,6 @@ const main = async () => {
     await gotoPage(page, id);
     await setTheme(page, 'light');
     await checkOverflow(page, `desktop-light/${id}`);
-    await shoot(page, `desktop-${id}-light-1280x800`);
   }
 
   // E-Ink layout evidence.
@@ -156,7 +163,6 @@ const main = async () => {
   await gotoPage(page, 'diagnostics');
   await setLayout(page, 'eink');
   await checkOverflow(page, 'eink/diagnostics');
-  await shoot(page, 'eink-diagnostics-1280x800');
 
   // Handheld layout at both breakpoints.
   console.log('· handheld layout');
@@ -168,7 +174,6 @@ const main = async () => {
     for (const id of PAGES) {
       await gotoPage(page, id);
       await checkOverflow(page, `phone-${layout}/${id}`);
-      await shoot(page, `phone-${id}-${layout === 'handheld' ? 'handheld' : 'desktop-layout'}-dark-390x844`);
     }
   }
 

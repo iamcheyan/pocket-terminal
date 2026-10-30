@@ -16,7 +16,7 @@ backend:
 	cd $(BACKEND) && POCKET_TERMINAL_ADDR=$(ADDR) go run .
 
 dev:
-	@echo "run 'make backend' and 'npm --prefix $(FRONTEND) run dev' in two shells"
+	./scripts/dev.sh
 
 ui-smoke:
 	cd $(FRONTEND) && node scripts/ui-smoke.mjs

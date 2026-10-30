@@ -1,4 +1,4 @@
-## Logs, diagnostics, runtime, actions evidence — captured 2026-10-30T21:46:52+09:00
+## Logs, diagnostics, runtime and quick actions — captured 2026-10-30T22:14:31+09:00 from http://127.0.0.1:8795
 
 ### GET /api/logs/sources
 {
@@ -19,6 +19,15 @@
             "label": "systemd journal",
             "description": "Structured host logs via journalctl (read-only).",
             "available": true
+        },
+        {
+            "id": "file:/home/tetsuya/.local/share/pocket-terminal/logs/terminald.log",
+            "kind": "file",
+            "label": "terminald.log",
+            "description": "/home/tetsuya/.local/share/pocket-terminal/logs/terminald.log",
+            "available": true,
+            "sizeBytes": 118193,
+            "updatedAt": "2026-10-30T13:14:30Z"
         }
     ]
 }
@@ -26,14 +35,26 @@
 ### GET /api/logs?source=journald&limit=5
 {
     "count": 5,
-    "durationMs": 16,
+    "durationMs": 17,
     "entries": [
         {
-            "id": "2065af4709f20851",
-            "time": "2026-10-30T12:46:52Z",
+            "id": "8fe694146b7c5b4c",
+            "time": "2026-10-30T13:14:31Z",
+            "level": "info",
+            "unit": "init.scope",
+            "message": "session-c694373.scope: Deactivated successfully.",
+            "metadata": {
+                "SYSLOG_IDENTIFIER": "systemd",
+                "_HOSTNAME": "hx90",
+                "_PID": "1"
+            }
+        },
+        {
+            "id": "79e215ba2bdea9e5",
+            "time": "2026-10-30T13:14:31Z",
             "level": "info",
             "unit": "tailscaled.service",
-            "message": "ssh-session(sess-20261030T124651-6b8a54c908): Wait: code=255",
+            "message": "ssh-session(sess-20261030T131431-fef1047b4d): Wait: code=255",
             "metadata": {
                 "SYSLOG_IDENTIFIER": "tailscaled",
                 "_HOSTNAME": "hx90",
@@ -41,11 +62,11 @@
             }
         },
         {
-            "id": "78e0ad8ef9f6d78b",
-            "time": "2026-10-30T12:46:52Z",
+            "id": "424a5d9b14f5a52d",
+            "time": "2026-10-30T13:14:31Z",
             "level": "info",
             "unit": "init.scope",
-            "message": "session-c686798.scope: Deactivated successfully.",
+            "message": "session-c694373.scope: Consumed 19ms CPU time over 21ms wall clock time, 2.3M memory peak, 730B incoming IP traffic, 836B outgoing IP traffic.",
             "metadata": {
                 "SYSLOG_IDENTIFIER": "systemd",
                 "_HOSTNAME": "hx90",
@@ -53,52 +74,57 @@
             }
         },
         {
-            "id": "7b0b84029c8a61d6",
-            "time": "2026-10-30T12:46:52Z",
-            "level": "info",
-            "unit": "init.scope",
-            "message": "session-c686798.scope: Consumed 17ms CPU time over 18ms wall clock time, 2.7M memory peak, 730B incoming IP traffic, 836B outgoing IP traffic.",
-            "metadata": {
-                "SYSLOG_IDENTIFIER": "systemd",
-                "_HOSTNAME": "hx90",
-                "_PID": "1"
-            }
-        },
-        {
-            "id": "9edb548a23cf33ac",
-            "time": "2026-10-30T12:46:52Z",
+            "id": "55e57c54053d6e9c",
+            "time": "2026-10-30T13:14:31Z",
             "level": "info",
             "unit": "systemd-logind.service",
-            "message": "Session c686798 logged out. Waiting for processes to exit.",
+            "message": "Session c694373 logged out. Waiting for processes to exit.",
             "metadata": {
                 "SYSLOG_IDENTIFIER": "systemd-logind",
                 "_HOSTNAME": "hx90",
                 "_PID": "1009"
+            }
+        },
+        {
+            "id": "6b082beb26f658bb",
+            "time": "2026-10-30T13:14:31Z",
+            "level": "info",
+            "unit": "systemd-logind.service",
+            "message": "Removed session c694373.",
+            "metadata": {
+                "SYSLOG_IDENTIFIER": "systemd-logind",
+                "_HOSTNAME": "hx90",
+                "_PID": "1009"
+            }
+        }
+    ],
+    "source": "journald"
+}
 
 ### GET /api/logs?source=journald&level=error&limit=3
-count 0
+count: 0 durationMs: 16
 
 ### GET /api/logs?source=file:/etc/shadow  (allowlist refusal)
 {"error":{"code":"invalid_query","message":"log file is outside the allowlist"}}
 
 HTTP 400
 
-### POST /api/logs/export (headers)
+### POST /api/logs/export (headers + first rows)
 HTTP/1.1 200 OK
-Content-Disposition: attachment; filename="pocket-terminal-journald-20261030-214652.log"
+Content-Disposition: attachment; filename="pocket-terminal-journald-20261030-221431.log"
 Content-Type: text/plain; charset=utf-8
 Referrer-Policy: no-referrer
 X-Content-Type-Options: nosniff
-Date: Fri, 30 Oct 2026 12:46:52 GMT
+Date: Fri, 30 Oct 2026 13:14:31 GMT
 --- body head
 # Pocket Terminal log export
 # source=journald unit= level= query=
-# exported=2026-10-30T12:46:52Z entries=5
-2026-10-30T12:46:52Z INFO    tailscaled.service ssh-session(sess-20261030T124651-6b8a54c908): Wait: code=255
+# exported=2026-10-30T13:14:31Z entries=5
+2026-10-30T13:14:31Z INFO    init.scope         session-c694373.scope: Deactivated successfully.
 
 ### GET /api/diagnostics
 {
-    "generatedAt": "2026-10-30T12:46:52Z",
+    "generatedAt": "2026-10-30T13:14:31Z",
     "host": {
         "arch": "amd64",
         "bootTime": "2026-10-26T21:34:11Z",
@@ -111,9 +137,10 @@ Date: Fri, 30 Oct 2026 12:46:52 GMT
     "cpu": [
         {
             "label": "CPU usage",
-            "value": 0,
+            "value": 15.2,
             "unit": "%",
-            "detail": "load 2.04"
+            "detail": "load 2.45",
+            "percent": 15.2
         },
         {
             "label": "Cores",
@@ -122,39 +149,39 @@ Date: Fri, 30 Oct 2026 12:46:52 GMT
         },
         {
             "label": "Processes",
-            "value": 727,
+            "value": 764,
             "unit": "procs"
         },
         {
             "label": "Load 1m",
-            "value": 2.04,
+            "value": 2.45,
             "unit": ""
         },
         {
             "label": "Load 5m",
-            "value": 5.07,
+            "value": 2.67,
             "unit": ""
         },
         {
             "label": "Load 15m",
-            "value": 5.69,
+            "value": 4.11,
             "unit": ""
         }
     ],
     "memory": [
         {
             "label": "Memory used",
-            "value": 25593360384,
+            "value": 26574446592,
             "unit": "B",
-            "detail": "23.8 GiB of 62.2 GiB",
-            "percent": 38.3
+            "detail": "24.7 GiB of 62.2 GiB",
+            "percent": 39.8
         },
         {
             "label": "Swap used",
-            "value": 28303638528,
+            "value": 28560273408,
             "unit": "B",
-            "detail": "26.4 GiB of 99.6 GiB",
-            "percent": 26.5
+            "detail": "26.6 GiB of 99.6 GiB",
+            "percent": 26.7
         }
     ],
     "disks": [
@@ -166,43 +193,126 @@ Date: Fri, 30 Oct 2026 12:46:52 GMT
                 "/var"
             ],
             "totalBytes": 925635481600,
-            "usedBytes": 754877079552,
-            "freeBytes": 170758402048,
-            "usedPct": 81.6
+            "usedBytes": 756340473856,
+            "freeBytes": 169295007744,
+            "usedPct": 81.7
         },
         {
             "mount": "/run/media",
             "totalBytes": 16703938560,
-            "usedBytes": 6295552,
-            "freeBytes": 16697643008,
+            "usedBytes": 6303744,
+            "freeBytes": 16697634816,
             "usedPct": 0
         },
+        {
+            "mount": "/storage",
+            "totalBytes": 1967845998592,
+            "usedBytes": 474188468224,
+            "freeBytes": 1493657530368,
+            "usedPct": 24.1
+        }
+    ],
+    "temperatures": [
+        {
+            "zone": "thermal_zone0",
+            "label": "iwlwifi_1",
+            "celsius": 55
+        }
+    ],
+    "network": [
+        {
+            "interface": "wlp3s0",
+            "rxBytes": 51883880501,
+            "txBytes": 121308429347,
+            "rxRate": 1285867.04,
+            "txRate": 633377.68
+        },
+        {
+            "interface": "tailscale0",
+            "rxBytes": 2509939692,
+            "txBytes": 10416792364,
+            "rxRate": 22782.78,
+            "txRate": 522192.38
+        },
+        {
+            "interface": "docker0",
+            "rxBytes": 162171209,
+            "txBytes": 18694718289,
+            "rxRate": 7686.66,
+            "txRate": 1174039.66
+        },
+        {
+            "interface": "eno1",
+            "rxBytes": 0,
+            "txBytes": 0,
+            "rxRate": 0,
+            "txRate": 0
+        }
+    ],
+    "services": [
+        {
+            "name": "NetworkManager",
+            "load": "loaded",
+            "active": "active",
+            "sub": "running",
+            "description": "Network Manager"
+        },
+        {
+            "name": "sshd",
+            "load": "loaded",
+            "active": "active",
+            "sub": "running",
+            "description": "SSH Daemon"
+        },
+        {
+            "name": "systemd-journald",
+            "load": "loaded",
+            "active": "active",
+            "sub": "running",
+            "description": "Journal Service"
+        }
+    ],
+    "load": [
+        2.45,
+        2.67,
+        4.11
+    ],
+    "uptime": 315620.74,
+    "providers": {
+        "cpu": "procfs",
+        "disk": "statfs",
+        "memory": "procfs",
+        "network": "procfs",
+        "services": "systemctl",
+        "temperature": "sysfs-thermal"
+    }
+}
 
-### GET /api/runtime
-daemon: {"addr": "127.0.0.1:8795", "gcCycles": 0, "goroutines": 8, "heapAllocBytes": 1564680, "name": "terminald", "pid": 1663458, "startedAt": "2026-10-30T12:46:38Z", "sysBytes": 13064456, "uptime": "14s", "version": "0.1.0"}
+### GET /api/runtime (trimmed)
+daemon: {"addr": "127.0.0.1:8795", "gcCycles": 84, "goroutines": 56, "heapAllocBytes": 10439936, "name": "terminald", "pid": 1803435, "startedAt": "2026-10-30T13:03:43Z", "sysBytes": 24295688, "uptime": "10m48s", "version": "0.1.0"}
 go: {"arch": "amd64", "numCPU": 16, "os": "linux", "version": "go1.26.6"}
 bridges: [('launcherd', False, 0), ('filesd', True, 0), ('settingsd', False, 0), ('terminald', True, 0)]
 apps: [('pocket-files', False), ('pocket-galaxy', True), ('pocket-gamehub', False), ('pocket-launcher', False), ('pocket-music', False), ('pocket-reader', False), ('pocket-settings', False), ('pocket-terminal', False)]
 roots: ['/home/tetsuya/development']
 
 ### GET /api/actions
-controlEnabled False
-  system.info | preview |dangerous False
-  system.uptime | preview |dangerous False
-  terminal.newShell | native |dangerous False
-  terminal.killAll | native |dangerous True
-  logs.journalErrors | preview |dangerous False
-  network.ports | command |dangerous False
-  services.restart.terminald | systemctl |dangerous True
-  services.restart.launcherd | systemctl |dangerous True
-  power.reboot | systemctl |dangerous True
+controlEnabled: False
+  system.info                    preview    dangerous=False needsRoot=False
+  system.uptime                  preview    dangerous=False needsRoot=False
+  terminal.newShell              native     dangerous=False needsRoot=False
+  terminal.killAll               native     dangerous=True needsRoot=False
+  logs.journalErrors             preview    dangerous=False needsRoot=False
+  network.ports                  command    dangerous=False needsRoot=True
+  services.restart.terminald     systemctl  dangerous=True needsRoot=True
+  services.restart.launcherd     systemctl  dangerous=True needsRoot=True
+  power.reboot                   systemctl  dangerous=True needsRoot=True
 
-### POST /api/actions/terminal.killAll {} (dangerous, unconfirmed)
+### POST /api/actions/terminal.killAll {}  (dangerous, unconfirmed)
 {"result":{"actionId":"terminal.killAll","executed":false,"confirmed":false,"refusal":"confirmation_required","durationMs":0}}
 
 HTTP 409
 
-### POST /api/actions/system.uptime {} (preview)
+### POST /api/actions/system.uptime {}  (preview)
 {
     "result": {
         "actionId": "system.uptime",
@@ -211,17 +321,17 @@ HTTP 409
         "durationMs": 2,
         "preview": {
             "load": [
-                2.04,
-                5.07,
-                5.69
+                2.45,
+                2.67,
+                4.11
             ],
-            "processes": 727,
-            "uptimeSeconds": 313961.75
+            "processes": 767,
+            "uptimeSeconds": 315620.82
         }
     }
 }
 
-### POST /api/actions/power.reboot {confirm:true} (control disabled)
+### POST /api/actions/power.reboot {confirm:true}  (control disabled)
 {
     "result": {
         "actionId": "power.reboot",
@@ -229,22 +339,5 @@ HTTP 409
         "confirmed": true,
         "refusal": "system_control_disabled",
         "durationMs": 0
-    }
-}
-
-### GET /api/security
-{
-    "allowSystemControl": false,
-    "authTokenRequired": false,
-    "bindAddr": "127.0.0.1:8795",
-    "knownHosts": 0,
-    "plaintextSecrets": false,
-    "secretStore": {
-        "keyFile": "secret.key",
-        "keyMode": "0600",
-        "keyring": false,
-        "keyringNote": "system keyring (secret-tool) provider is a documented follow-up; file key is never logged or returned",
-        "plaintextSecrets": false,
-        "provider": "aes-256-gcm-file"
     }
 }

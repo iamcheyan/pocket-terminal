@@ -1,80 +1,102 @@
-## SSH TOFU + credential-at-rest evidence — captured 2026-10-30T21:45:51+09:00
-profile id: pmvuytmd6_d20b200b
+## SSH TOFU handshake and credential storage — captured 2026-10-30T22:14:27+09:00 from http://127.0.0.1:8795
 
-### POST /api/ssh/profiles/<id>/test  (pre-flight probe; key not trusted yet)
+mock profile: pmvuzf3tz_f33cd1a5
+
+### reset the trust store so the TOFU prompt is exercised
+{"knownHosts":[]}
+
+
+### POST /api/ssh/profiles/pmvuzf3tz_f33cd1a5/test  (pre-flight, host not trusted)
 {
     "result": {
         "reachable": true,
         "authenticated": false,
         "hostKeyState": "unknown",
-        "fingerprint": "SHA256:WjGBQyqL8aqz7vXB0WC9KQbSf2mTSMZMm+yJ2/A3Z/A",
+        "fingerprint": "SHA256:YWAQNMYr7gNTqd6PVnfXcrMUmdMmIthYOz6upKj6rWA",
         "mock": true,
         "latencyMs": 1,
         "message": "host key is not yet trusted"
     }
 }
 
-### POST /api/ssh/profiles/<id>/connect {}  → TOFU challenge (HTTP 409)
-{"error":{"code":"host_key_unknown","message":"host key is not trusted yet","details":{"fingerprint":"SHA256:WjGBQyqL8aqz7vXB0WC9KQbSf2mTSMZMm+yJ2/A3Z/A","host":"127.0.0.1","keyType":"ssh-ed25519","mock":true,"port":45921}}}
+### POST /api/ssh/profiles/pmvuzf3tz_f33cd1a5/connect {}  → TOFU challenge
+{"error":{"code":"host_key_unknown","message":"host key is not trusted yet","details":{"fingerprint":"SHA256:YWAQNMYr7gNTqd6PVnfXcrMUmdMmIthYOz6upKj6rWA","host":"127.0.0.1","keyType":"ssh-ed25519","mock":true,"port":34609}}}
 
 HTTP 409
 
 ### trust store is still empty before the user confirms
 {"knownHosts":[]}
 
-### POST connect {acceptHostKey:true, fingerprint:<shown>} → live session
+
+### POST connect {acceptHostKey:true, fingerprint:<shown>}
 {
     "session": {
-        "id": "smvuytxl5_b4251dd5",
+        "id": "smvuzuq53_245584d5",
         "title": "Mock Lab",
         "shell": "ssh demo@127.0.0.1",
         "shellId": "ssh",
         "cwd": "",
         "kind": "ssh",
         "tabsGroup": "main",
-        "profileId": "pmvuytmd6_d20b200b",
+        "profileId": "pmvuzf3tz_f33cd1a5",
         "mock": true,
         "state": "running",
-        "createdAt": "2026-10-30T12:45:51Z",
+        "createdAt": "2026-10-30T13:14:27Z",
         "rows": 30,
         "cols": 100,
         "bytes": 0
     }
 }
 
-### POST input: echo SSH_EVIDENCE_$((11*11)); hostname
-{"accepted":39}
+### POST input on the SSH session: echo SSH_EVIDENCE_$((11*11)); hostname
+{
+    "accepted": 39
+}
 
-### GET output (ANSI stripped)
-❯ ❯ echo SSH_EVIDENCE_$((11*11)); hostname
-SSH_EVIDENCE_121
+### output (ANSI stripped)
+❯ [6 q[6 qe[6 qec[6 qh[6 qo[6 q [6 qS[6 qS[6 qH[6 q_[6 qE[6 qV[6 qI[6 qD[6 qE[6 qN[6 qC[6 qE[6 q_[6 q$[6 q()[6 q())[6 q1))[6 q1))[6 q*))[6 q1))[6 q1))[6 q[6 q[6 q;[6 q [6 qh[6 qo[6 qs[6 qt[6 qn[6 qa[6 qm[6 qe[6 q[6 qechohostname>[0 q
+SSH_EVIDENCE_121
 hx90
-
-hx90@ssh /tmp  v3.13.15  v26.8.1   v1.26.6 at 21:45 
-❯ ❯ 
+%                                                                                                    ]2;[SSH] tetsuya@hx90: ~/development/pocket-terminal
+hx90@ssh pocket-terminal on  main [-16~57?2] at 22:14 
+❯ [6 q[6 q
 ### GET /api/ssh/known-hosts after confirmation (keyed by the profile address)
 {
     "knownHosts": [
         {
-            "id": "127.0.0.1:45921",
+            "id": "127.0.0.1:34609",
             "host": "127.0.0.1",
-            "port": 45921,
+            "port": 34609,
             "keyType": "ssh-ed25519",
-            "fingerprint": "SHA256:WjGBQyqL8aqz7vXB0WC9KQbSf2mTSMZMm+yJ2/A3Z/A",
-            "addedAt": "2026-10-30T12:45:51Z",
+            "fingerprint": "SHA256:YWAQNMYr7gNTqd6PVnfXcrMUmdMmIthYOz6upKj6rWA",
+            "addedAt": "2026-10-30T13:14:27Z",
             "mock": true
         }
     ]
 }
 
-### POST connect again: no second prompt
+### connecting again does not re-prompt
 HTTP 201
 
-### credential at rest: <data>/state.json holds ciphertext only
-Mock Lab     passwordCipher=+atfosrpT4iiMjNCAq… len=48 keyCipher=(none)
-Edge Router  passwordCipher=(none) len=0 keyCipher=(none)
-Build Box    passwordCipher=(none) len=0 keyCipher=(none)
+### credentials at rest in /home/tetsuya/.local/share/pocket-terminal/state.json
+Mock Lab     passwordCipher=<48 bytes base64> keyCipher=(none)
+Edge Router  passwordCipher=(none) keyCipher=(none)
+Build Box    passwordCipher=(none) keyCipher=(none)
+profiles with a plaintext password field: none
 
 ### file modes
-600 /tmp/pt-data/state.json
-600 /tmp/pt-data/secret.key
+600 /home/tetsuya/.local/share/pocket-terminal/state.json
+600 /home/tetsuya/.local/share/pocket-terminal/secret.key
+
+### known hosts (trust store)
+[
+  {
+    "id": "127.0.0.1:34609",
+    "host": "127.0.0.1",
+    "port": 34609,
+    "keyType": "ssh-ed25519",
+    "fingerprint": "SHA256:YWAQNMYr7gNTqd6PVnfXcrMUmdMmIthYOz6upKj6rWA",
+    "addedAt": "2026-10-30T13:14:27Z",
+    "mock": true
+  }
+]

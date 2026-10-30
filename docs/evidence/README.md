@@ -33,10 +33,13 @@ aborts on a violation, so the presence of a file implies the check passed.
 
 | File | Command source |
 |---|---|
-| `health-meta-shells.txt` | `curl` against `/api/health`, `/api/meta`, `/api/terminal/shells` |
-| `terminal-ssh.txt` | create PTY session, send `echo POCKET_API_EVIDENCE_$((6*7))`, read output, resize, list SSH profiles |
-| `ssh-tofu.txt` | probe → `409 host_key_unknown` → explicit accept → live session → `echo SSH_EVIDENCE_$((11*11))` → known_hosts → ciphertext at rest |
-| `logs-diagnostics-runtime.txt` | log sources/queries/allowlist refusal/export, diagnostics, runtime, actions (confirmation + control-disabled), security report |
+| `health-meta-shells.txt` | `GET /api/health`, `/api/meta`, `/api/security`, `/api/terminal/shells` |
+| `terminal-ssh.txt` | create PTY session, send `echo POCKET_API_EVIDENCE_$((6*7))`, read output, resize, rejected shell, SSH profile list, disposable profile create/delete |
+| `ssh-tofu.txt` | probe → `409 host_key_unknown` → explicit accept → live session → `echo SSH_EVIDENCE_$((11*11))` → known_hosts → ciphertext-at-rest shape + `0600` modes |
+| `logs-diagnostics-runtime.txt` | log sources/queries/allowlist refusal/export, full diagnostics, trimmed runtime, action catalog, confirmation + control-disabled refusals |
+
+All four were produced by `./scripts/evidence.sh` (idempotent; it frees stale
+sessions first and never echoes ciphertext or a password).
 
 ## Test transcripts — `tests/`
 
@@ -56,5 +59,6 @@ node scripts/screenshots.mjs
 node scripts/ui-smoke.mjs
 ```
 
-API transcripts are plain shell sessions; the exact `curl` invocations are
-reproduced in `docs/API.md`.
+```sh
+./scripts/evidence.sh                            # rewrites docs/evidence/api/*
+```

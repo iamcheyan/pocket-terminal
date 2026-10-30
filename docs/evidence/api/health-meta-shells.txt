@@ -1,14 +1,14 @@
-## curl evidence — captured 2026-10-30T21:44:26+09:00 from http://127.0.0.1:8795
+## Health, meta and shell detection — captured 2026-10-30T22:14:23+09:00 from http://127.0.0.1:8795
 
 ### GET /api/health
 {
     "dataStore": "json-file",
     "mock": true,
     "service": "terminald",
-    "sessions": 2,
+    "sessions": 0,
     "status": "ok",
-    "time": "2026-10-30T21:44:26+09:00",
-    "uptime": "6m13s",
+    "time": "2026-10-30T22:14:23+09:00",
+    "uptime": "10m40s",
     "version": "0.1.0"
 }
 
@@ -26,7 +26,7 @@
         "systemControl": false,
         "terminalEmulator": "xterm.js (client-side rendering)"
     },
-    "defaultShell": "bash",
+    "defaultShell": "zsh",
     "limits": {
         "idleTimeout": 1800000000000,
         "maxSessions": 8,
@@ -42,15 +42,15 @@
     "service": "terminald",
     "shells": [
         {
-            "id": "bash",
-            "name": "Bash",
-            "path": "/run/current-system/sw/bin/bash",
-            "default": true
-        },
-        {
             "id": "zsh",
             "name": "Zsh",
             "path": "/run/current-system/sw/bin/zsh",
+            "default": true
+        },
+        {
+            "id": "bash",
+            "name": "Bash",
+            "path": "/run/current-system/sw/bin/bash",
             "default": false
         },
         {
@@ -66,24 +66,41 @@
             "default": false
         }
     ],
-    "startedAt": "2026-10-30T21:38:13+09:00",
+    "startedAt": "2026-10-30T22:03:43+09:00",
     "version": "0.1.0"
+}
+
+### GET /api/security
+{
+    "allowSystemControl": false,
+    "authTokenRequired": false,
+    "bindAddr": "127.0.0.1:8795",
+    "knownHosts": 1,
+    "plaintextSecrets": false,
+    "secretStore": {
+        "keyFile": "secret.key",
+        "keyMode": "0600",
+        "keyring": false,
+        "keyringNote": "system keyring (secret-tool) provider is a documented follow-up; file key is never logged or returned",
+        "plaintextSecrets": false,
+        "provider": "aes-256-gcm-file"
+    }
 }
 
 ### GET /api/terminal/shells
 {
-    "defaultShell": "bash",
+    "defaultShell": "zsh",
     "shells": [
-        {
-            "id": "bash",
-            "name": "Bash",
-            "path": "/run/current-system/sw/bin/bash",
-            "default": true
-        },
         {
             "id": "zsh",
             "name": "Zsh",
             "path": "/run/current-system/sw/bin/zsh",
+            "default": true
+        },
+        {
+            "id": "bash",
+            "name": "Bash",
+            "path": "/run/current-system/sw/bin/bash",
             "default": false
         },
         {
@@ -99,5 +116,5 @@
             "default": false
         }
     ],
-    "userShell": ""
+    "userShell": "/run/current-system/sw/bin/zsh"
 }
