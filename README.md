@@ -44,6 +44,7 @@ npm run dev -- --host 127.0.0.1 --port 5178   # http://127.0.0.1:5178
 Other root targets: `make test` (go vet + go test + tsc + vitest),
 `make ui-smoke`, `make build`, and `make verify` — which starts the stack itself,
 runs both suites, then drives the real browser walk and stops everything again.
+Inside `apps/pocket-terminal/frontend`, `npm test` is the same vitest run.
 
 Open <http://127.0.0.1:5178>. The first local shell is one click (or `Ctrl/⌘+K` →
 “New local shell”). The seeded **Mock Lab** SSH profile connects to a loopback sshd
