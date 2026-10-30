@@ -1,8 +1,8 @@
 # Verification — pocket-terminal @ 2026-10-31
 
 - Verdict: PASS
-- Commit: `__COMMIT__` (screenshots + docs; this document is the following commit)
-- Remote: `__REMOTE__`
+- Commit: `888cc7dc5a60f87e9e1a4c8c114e978a51741699` (screenshots + docs; this document is the following commit)
+- Remote: `888cc7dc5a60f87e9e1a4c8c114e978a51741699`
 - Runtime: `./scripts/verify.sh --start` (terminald `127.0.0.1:8795` + Vite `127.0.0.1:5178`), then `npm run build` + `vite preview 127.0.0.1:5179` for the production-form probe
 - Toolchain: go 1.26.0, node v22.23.3, Chrome 155.0.8059.84
 
