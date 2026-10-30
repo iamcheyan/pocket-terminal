@@ -1,13 +1,13 @@
 # Evidence index
 
-All artefacts in this directory were produced on the build host (HX90, NixOS,
-x86_64) by the commands quoted in each section. No physical handheld was
+All artefacts in this directory were produced on the build host (Debian NAS VM, x86_64)
+by the commands quoted in each section. No physical handheld was
 available — see [`../KNOWN-LIMITS.md`](../KNOWN-LIMITS.md).
 
 ## Screenshots — `screens/`
 
 Captured with `node scripts/screenshots.mjs` and `node scripts/ui-smoke.mjs`
-against Chromium 152 (headless) driving the real daemon.
+against Chrome 155 (headless) driving the real daemon (2026-10-31 run).
 
 | Group | Count | Viewport | Notes |
 |---|---|---|---|
