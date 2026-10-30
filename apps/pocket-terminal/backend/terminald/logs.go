@@ -208,6 +208,15 @@ func parseJournalLine(raw []byte) (LogEntry, bool) {
 	if entry.Message == "" {
 		return entry, false
 	}
+	// __CURSOR is unique per journal entry; hashing it keeps React keys stable
+	// even when two units emit identical text in the same second.
+	if cursor := asString("__CURSOR"); cursor != "" {
+		entry.ID = hashID(cursor)
+	} else if micros := asString("__REALTIME_TIMESTAMP"); micros != "" {
+		entry.ID = hashID(micros + entry.Message + entry.Unit)
+	} else {
+		entry.ID = hashID(entry.Time + entry.Unit + entry.Message + asString("MESSAGE"))
+	}
 	metadata := map[string]any{}
 	for _, key := range []string{"_PID", "_HOSTNAME", "SYSLOG_IDENTIFIER"} {
 		if value := asString(key); value != "" {
@@ -217,7 +226,6 @@ func parseJournalLine(raw []byte) (LogEntry, bool) {
 	if len(metadata) > 0 {
 		entry.Metadata = metadata
 	}
-	entry.ID = hashID(entry.Time + entry.Unit + entry.Message)
 	return entry, true
 }
 
@@ -258,15 +266,18 @@ func queryFileLog(ctx context.Context, path string, q logQuery) ([]LogEntry, err
 		scanner.Scan()
 	}
 	pattern, _ := regexp.Compile("(?i)" + regexp.QuoteMeta(q.Query))
+	lineNo := 0
 	for scanner.Scan() {
 		if ctx.Err() != nil {
 			break
 		}
+		lineNo++
 		line := scanner.Text()
 		if q.Query != "" && !pattern.MatchString(line) {
 			continue
 		}
 		entry := parsePlainLine(line)
+		entry.ID = hashID(path + ":" + strconv.Itoa(lineNo) + ":" + line)
 		if !levelMatches(entry.Level, q.Level) {
 			continue
 		}

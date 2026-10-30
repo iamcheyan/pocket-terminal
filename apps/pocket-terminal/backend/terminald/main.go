@@ -7,12 +7,14 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -221,6 +223,19 @@ func (r *statusRecorder) Flush() {
 		flusher.Flush()
 	}
 }
+
+// Hijack forwards to the underlying writer so WebSocket upgrades work through
+// the logging middleware.
+func (r *statusRecorder) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	hijacker, ok := r.ResponseWriter.(http.Hijacker)
+	if !ok {
+		return nil, nil, fmt.Errorf("response writer does not support hijacking")
+	}
+	return hijacker.Hijack()
+}
+
+// Unwrap lets http.ResponseController find the original writer.
+func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter }
 
 func main() {
 	cfg, err := parseConfig(os.Args[1:])

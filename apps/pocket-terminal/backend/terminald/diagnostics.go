@@ -50,11 +50,15 @@ type Metric struct {
 }
 
 type DiskInfo struct {
-	Mount      string  `json:"mount"`
-	TotalBytes uint64  `json:"totalBytes"`
-	UsedBytes  uint64  `json:"usedBytes"`
-	FreeBytes  uint64  `json:"freeBytes"`
-	UsedPct    float64 `json:"usedPct"`
+	Mount string `json:"mount"`
+	// Aliases lists further mounts that resolve to the same storage pool
+	// (btrfs subvolumes, bind mounts). They are grouped rather than repeated so
+	// three rows of identical numbers are not read as three full filesystems.
+	Aliases    []string `json:"aliases,omitempty"`
+	TotalBytes uint64   `json:"totalBytes"`
+	UsedBytes  uint64   `json:"usedBytes"`
+	FreeBytes  uint64   `json:"freeBytes"`
+	UsedPct    float64  `json:"usedPct"`
 }
 
 type ThermalInfo struct {
@@ -227,7 +231,9 @@ func memoryMetrics() ([]Metric, string) {
 func diskMetrics() ([]DiskInfo, string) {
 	mounts := []string{"/", "/home", "/tmp", "/var", "/run/media", "/storage"}
 	seen := map[string]bool{}
-	seenDevice := map[uint64]bool{}
+	// btrfs subvolumes report distinct fsids for the same pool, so grouping by
+	// (total, free) is the reliable signal for "same storage".
+	groups := map[[2]uint64]int{}
 	var out []DiskInfo
 	for _, mount := range mounts {
 		if seen[mount] {
@@ -237,25 +243,24 @@ func diskMetrics() ([]DiskInfo, string) {
 		if err != nil || !info.IsDir() {
 			continue
 		}
-		sys, ok := info.Sys().(*syscall.Stat_t)
-		if ok && seenDevice[sys.Dev] {
-			// Bind mounts of an already-reported filesystem add no information.
-			continue
-		}
 		var stat syscall.Statfs_t
 		if err := syscall.Statfs(mount, &stat); err != nil {
 			continue
-		}
-		if ok {
-			seenDevice[sys.Dev] = true
 		}
 		total := stat.Blocks * uint64(stat.Bsize)
 		free := stat.Bavail * uint64(stat.Bsize)
 		if total == 0 {
 			continue
 		}
+		poolKey := [2]uint64{total, free}
+		if index, ok := groups[poolKey]; ok {
+			out[index].Aliases = append(out[index].Aliases, mount)
+			seen[mount] = true
+			continue
+		}
 		used := total - free
 		seen[mount] = true
+		groups[poolKey] = len(out)
 		out = append(out, DiskInfo{
 			Mount: mount, TotalBytes: total, UsedBytes: used, FreeBytes: free,
 			UsedPct: round1(float64(used) / float64(total) * 100),

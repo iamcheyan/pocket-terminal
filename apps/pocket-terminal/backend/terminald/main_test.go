@@ -719,3 +719,49 @@ func TestHostIDHandlesIPv6(t *testing.T) {
 		t.Fatalf("host id normalisation: %q", got)
 	}
 }
+
+func TestDiskMetricsGroupsSharedPools(t *testing.T) {
+	disks, provider := diskMetrics()
+	if provider != "statfs" {
+		t.Skipf("statfs unavailable: %s", provider)
+	}
+	seen := map[[2]uint64]bool{}
+	for _, disk := range disks {
+		key := [2]uint64{disk.TotalBytes, disk.FreeBytes}
+		if seen[key] {
+			t.Fatalf("duplicate storage pool reported: %+v", disks)
+		}
+		seen[key] = true
+		if disk.UsedBytes+disk.FreeBytes > disk.TotalBytes {
+			t.Fatalf("inconsistent disk accounting: %+v", disk)
+		}
+	}
+}
+
+func TestParsePlainLineLevels(t *testing.T) {
+	cases := map[string]string{
+		"2026-10-30T10:00:00 host app: ERROR boom":   "error",
+		"2026-10-30T10:00:00 host app: warning slow": "warning",
+		"2026-10-30T10:00:00 host app: info fine":    "info",
+		"plain line without timestamp":               "info",
+	}
+	for line, want := range cases {
+		if got := parsePlainLine(line).Level; got != want {
+			t.Fatalf("%q => %q, want %q", line, got, want)
+		}
+	}
+}
+
+func TestRingBufferResumesAfterDisconnect(t *testing.T) {
+	ring := newRingBuffer(64)
+	ring.Write([]byte("first-chunk;"))
+	_, cursor := ring.Since(0)
+	ring.Write([]byte("second-chunk"))
+	replay, next := ring.Since(cursor)
+	if string(replay) != "second-chunk" {
+		t.Fatalf("resume must replay only new bytes: %q", replay)
+	}
+	if next != ring.Total() {
+		t.Fatalf("next offset: %d vs %d", next, ring.Total())
+	}
+}
