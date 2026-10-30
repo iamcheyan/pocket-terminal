@@ -1,4 +1,4 @@
-.PHONY: build test dev backend ui-smoke screenshots clean
+.PHONY: build test dev backend ui-smoke screenshots verify clean
 
 BACKEND := apps/pocket-terminal/backend/terminald
 FRONTEND := apps/pocket-terminal/frontend
@@ -20,6 +20,9 @@ dev:
 
 ui-smoke:
 	cd $(FRONTEND) && node scripts/ui-smoke.mjs
+
+verify:
+	./scripts/verify.sh --start
 
 clean:
 	rm -f $(BACKEND)/terminald

@@ -20,7 +20,15 @@ npm install
 npm run dev -- --host 127.0.0.1 --port 5178
 ```
 
-From the repository root: `make backend`, `make test`, `make ui-smoke`.
+From the repository root:
+
+| Target | Does |
+|---|---|
+| `make dev` | builds terminald, runs it, serves the UI (one Ctrl+C stops both) |
+| `make backend` | terminald only |
+| `make test` | `go vet` + `go test` + `tsc` + `vitest` |
+| `make ui-smoke` | headless Chromium walk against an already-running stack |
+| `make verify` | starts the stack, runs everything above, stops it — the release gate |
 
 Production bundle:
 

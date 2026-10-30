@@ -1,0 +1,403 @@
+$ ./scripts/verify.sh --start
+== building terminald
+2026/10/30 22:28:28 terminald pruned stale mock known-host 127.0.0.1:42425
+2026/10/30 22:28:28 terminald listening on http://127.0.0.1:8795 (data=/home/tetsuya/.local/share/pocket-terminal, mock-ssh=true, control=false)
+2026/10/30 22:28:28 terminald GET /api/health 200 0s
+== go vet + go test
+ok  	pocket-terminal/terminald	20.811s
+== typecheck + component tests
+
+ RUN  v5.0.5 /home/tetsuya/development/pocket-terminal/apps/pocket-terminal/frontend
+
+
+ Test Files  5 passed (5)
+      Tests  31 passed (31)
+   Start at  22:28:50
+   Duration  1.36s (environment 56%, tests 25%, setup 9%, import 9%, transform 1%, worker 1%)
+
+== headless browser walk
+2026/10/30 22:28:52 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:52 terminald GET /api/ssh/known-hosts 200 0s
+· cleared 0 sessions, 0 known hosts
+· desktop dark walk
+2026/10/30 22:28:52 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:28:52 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:52 terminald GET /api/actions 200 0s
+2026/10/30 22:28:52 terminald GET /api/meta 200 0s
+2026/10/30 22:28:52 terminald GET /api/health 200 0s
+2026/10/30 22:28:52 terminald GET /api/runtime 200 2ms
+2026/10/30 22:28:52 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:52 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:28:52 terminald GET /api/actions 200 0s
+2026/10/30 22:28:52 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:52 terminald GET /api/meta 200 0s
+2026/10/30 22:28:52 terminald GET /api/health 200 0s
+2026/10/30 22:28:52 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:52 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:53 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:28:53 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:53 terminald GET /api/actions 200 0s
+2026/10/30 22:28:53 terminald GET /api/meta 200 0s
+2026/10/30 22:28:53 terminald GET /api/health 200 0s
+2026/10/30 22:28:53 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:53 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:28:53 terminald GET /api/actions 200 0s
+2026/10/30 22:28:53 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:53 terminald GET /api/meta 200 0s
+2026/10/30 22:28:53 terminald GET /api/health 200 0s
+2026/10/30 22:28:53 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:53 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:53 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:54 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:54 terminald GET /api/meta 200 0s
+2026/10/30 22:28:54 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:54 terminald GET /api/meta 200 0s
+2026/10/30 22:28:55 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:28:55 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:28:55 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:55 terminald GET /api/meta 200 0s
+2026/10/30 22:28:55 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:28:55 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:55 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:28:55 terminald GET /api/meta 200 0s
+2026/10/30 22:28:56 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:28:56 terminald GET /api/meta 200 0s
+2026/10/30 22:28:56 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:56 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:28:56 terminald GET /api/meta 200 0s
+2026/10/30 22:28:56 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:56 terminald GET /api/logs 200 30ms
+2026/10/30 22:28:56 terminald GET /api/logs 200 27ms
+2026/10/30 22:28:58 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:58 terminald GET /api/meta 200 1ms
+2026/10/30 22:28:58 terminald GET /api/health 200 0s
+2026/10/30 22:28:58 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:58 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:58 terminald GET /api/meta 200 0s
+2026/10/30 22:28:58 terminald GET /api/health 200 0s
+2026/10/30 22:28:58 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:58 terminald GET /api/diagnostics 200 11ms
+2026/10/30 22:28:58 terminald GET /api/diagnostics 200 9ms
+2026/10/30 22:28:59 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:59 terminald GET /api/meta 200 0s
+2026/10/30 22:28:59 terminald GET /api/health 200 0s
+2026/10/30 22:28:59 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:59 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:28:59 terminald GET /api/meta 200 0s
+2026/10/30 22:28:59 terminald GET /api/health 200 0s
+2026/10/30 22:28:59 terminald GET /api/runtime 200 1ms
+2026/10/30 22:28:59 terminald GET /api/meta 200 0s
+2026/10/30 22:28:59 terminald GET /api/meta 200 0s
+2026/10/30 22:29:00 terminald GET /api/actions 200 0s
+2026/10/30 22:29:00 terminald GET /api/meta 200 0s
+2026/10/30 22:29:00 terminald GET /api/terminal/sessions 200 1ms
+2026/10/30 22:29:00 terminald GET /api/actions 200 0s
+2026/10/30 22:29:00 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:00 terminald GET /api/meta 200 1ms
+2026/10/30 22:29:01 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:01 terminald GET /api/meta 200 0s
+2026/10/30 22:29:01 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:01 terminald GET /api/meta 200 0s
+· desktop light walk
+2026/10/30 22:29:01 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:01 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:01 terminald GET /api/actions 200 0s
+2026/10/30 22:29:01 terminald GET /api/meta 200 0s
+2026/10/30 22:29:01 terminald GET /api/health 200 0s
+2026/10/30 22:29:01 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:01 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:01 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:01 terminald GET /api/actions 200 0s
+2026/10/30 22:29:01 terminald GET /api/meta 200 1ms
+2026/10/30 22:29:01 terminald GET /api/health 200 0s
+2026/10/30 22:29:01 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:01 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:01 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:03 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:03 terminald GET /api/meta 200 0s
+2026/10/30 22:29:03 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:03 terminald GET /api/meta 200 0s
+2026/10/30 22:29:04 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:04 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:04 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:04 terminald GET /api/meta 200 0s
+2026/10/30 22:29:04 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:04 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:04 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:04 terminald GET /api/meta 200 0s
+2026/10/30 22:29:05 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:05 terminald GET /api/meta 200 0s
+2026/10/30 22:29:05 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:05 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:05 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:05 terminald GET /api/meta 200 0s
+2026/10/30 22:29:05 terminald GET /api/logs 200 31ms
+2026/10/30 22:29:05 terminald GET /api/logs 200 28ms
+2026/10/30 22:29:06 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:06 terminald GET /api/meta 200 0s
+2026/10/30 22:29:06 terminald GET /api/health 200 0s
+2026/10/30 22:29:06 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:06 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:06 terminald GET /api/meta 200 0s
+2026/10/30 22:29:06 terminald GET /api/health 200 0s
+2026/10/30 22:29:06 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:06 terminald GET /api/diagnostics 200 11ms
+2026/10/30 22:29:06 terminald GET /api/diagnostics 200 10ms
+2026/10/30 22:29:07 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:07 terminald GET /api/meta 200 0s
+2026/10/30 22:29:07 terminald GET /api/health 200 0s
+2026/10/30 22:29:07 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:07 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:07 terminald GET /api/meta 200 0s
+2026/10/30 22:29:07 terminald GET /api/health 200 0s
+2026/10/30 22:29:07 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:07 terminald GET /api/meta 200 0s
+2026/10/30 22:29:07 terminald GET /api/meta 200 0s
+2026/10/30 22:29:08 terminald GET /api/actions 200 0s
+2026/10/30 22:29:08 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:08 terminald GET /api/meta 200 0s
+2026/10/30 22:29:08 terminald GET /api/actions 200 0s
+2026/10/30 22:29:08 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:08 terminald GET /api/meta 200 0s
+2026/10/30 22:29:10 terminald GET /api/meta 200 0s
+2026/10/30 22:29:10 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:10 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:10 terminald GET /api/meta 200 0s
+· e-ink layout
+2026/10/30 22:29:11 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:11 terminald GET /api/meta 200 0s
+2026/10/30 22:29:11 terminald GET /api/health 200 0s
+2026/10/30 22:29:11 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:11 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:11 terminald GET /api/meta 200 0s
+2026/10/30 22:29:11 terminald GET /api/diagnostics 200 12ms
+2026/10/30 22:29:11 terminald GET /api/health 200 0s
+2026/10/30 22:29:11 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:11 terminald GET /api/diagnostics 200 10ms
+· handheld layout
+2026/10/30 22:29:12 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:12 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:12 terminald GET /api/actions 200 0s
+2026/10/30 22:29:12 terminald GET /api/meta 200 0s
+2026/10/30 22:29:12 terminald GET /api/health 200 0s
+2026/10/30 22:29:12 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:12 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:12 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:12 terminald GET /api/actions 200 0s
+2026/10/30 22:29:12 terminald GET /api/meta 200 0s
+2026/10/30 22:29:12 terminald GET /api/health 200 0s
+2026/10/30 22:29:12 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:12 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:12 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:13 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:13 terminald GET /api/actions 200 0s
+2026/10/30 22:29:13 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:13 terminald GET /api/meta 200 0s
+2026/10/30 22:29:13 terminald GET /api/health 200 0s
+2026/10/30 22:29:13 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:13 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:13 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:13 terminald GET /api/actions 200 0s
+2026/10/30 22:29:13 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:13 terminald GET /api/meta 200 0s
+2026/10/30 22:29:13 terminald GET /api/health 200 0s
+2026/10/30 22:29:13 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:13 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:14 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:14 terminald GET /api/meta 200 0s
+2026/10/30 22:29:14 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:14 terminald GET /api/meta 200 0s
+2026/10/30 22:29:15 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:15 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:15 terminald GET /api/meta 200 0s
+2026/10/30 22:29:15 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:15 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:15 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:15 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:15 terminald GET /api/meta 200 0s
+2026/10/30 22:29:16 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:16 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:16 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:16 terminald GET /api/meta 200 0s
+2026/10/30 22:29:16 terminald GET /api/meta 200 0s
+2026/10/30 22:29:16 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:16 terminald GET /api/logs 200 31ms
+2026/10/30 22:29:16 terminald GET /api/logs 200 33ms
+2026/10/30 22:29:17 terminald GET /api/health 200 0s
+2026/10/30 22:29:17 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:17 terminald GET /api/meta 200 0s
+2026/10/30 22:29:17 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:17 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:17 terminald GET /api/health 200 0s
+2026/10/30 22:29:17 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:17 terminald GET /api/meta 200 0s
+2026/10/30 22:29:17 terminald GET /api/diagnostics 200 12ms
+2026/10/30 22:29:17 terminald GET /api/diagnostics 200 13ms
+2026/10/30 22:29:18 terminald GET /api/meta 200 0s
+2026/10/30 22:29:18 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:18 terminald GET /api/health 200 0s
+2026/10/30 22:29:18 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:18 terminald GET /api/meta 200 0s
+2026/10/30 22:29:18 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:18 terminald GET /api/health 200 0s
+2026/10/30 22:29:18 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:18 terminald GET /api/meta 200 0s
+2026/10/30 22:29:18 terminald GET /api/meta 200 0s
+2026/10/30 22:29:19 terminald GET /api/actions 200 0s
+2026/10/30 22:29:19 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:19 terminald GET /api/meta 200 0s
+2026/10/30 22:29:19 terminald GET /api/actions 200 0s
+2026/10/30 22:29:19 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:19 terminald GET /api/meta 200 0s
+2026/10/30 22:29:20 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:20 terminald GET /api/meta 200 0s
+2026/10/30 22:29:20 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:20 terminald GET /api/meta 200 0s
+2026/10/30 22:29:21 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:21 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:21 terminald GET /api/actions 200 0s
+2026/10/30 22:29:21 terminald GET /api/meta 200 0s
+2026/10/30 22:29:21 terminald GET /api/health 200 0s
+2026/10/30 22:29:21 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:21 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:21 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:21 terminald GET /api/actions 200 0s
+2026/10/30 22:29:21 terminald GET /api/meta 200 0s
+2026/10/30 22:29:21 terminald GET /api/health 200 0s
+2026/10/30 22:29:21 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:21 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:21 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:23 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:23 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:23 terminald GET /api/actions 200 0s
+2026/10/30 22:29:23 terminald GET /api/meta 200 0s
+2026/10/30 22:29:23 terminald GET /api/health 200 0s
+2026/10/30 22:29:23 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:23 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:23 terminald GET /api/actions 200 0s
+2026/10/30 22:29:23 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:23 terminald GET /api/meta 200 0s
+2026/10/30 22:29:23 terminald GET /api/health 200 0s
+2026/10/30 22:29:23 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:23 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:23 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:24 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:24 terminald GET /api/meta 200 0s
+2026/10/30 22:29:24 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:24 terminald GET /api/meta 200 0s
+2026/10/30 22:29:25 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:25 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:25 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:25 terminald GET /api/meta 200 0s
+2026/10/30 22:29:25 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:25 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:25 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:25 terminald GET /api/meta 200 0s
+2026/10/30 22:29:26 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:26 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:26 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:26 terminald GET /api/meta 200 0s
+2026/10/30 22:29:26 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:26 terminald GET /api/meta 200 0s
+2026/10/30 22:29:26 terminald GET /api/logs 200 28ms
+2026/10/30 22:29:26 terminald GET /api/logs 200 26ms
+2026/10/30 22:29:27 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:27 terminald GET /api/meta 200 0s
+2026/10/30 22:29:27 terminald GET /api/health 200 0s
+2026/10/30 22:29:27 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:27 terminald GET /api/meta 200 0s
+2026/10/30 22:29:27 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:27 terminald GET /api/health 200 0s
+2026/10/30 22:29:27 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:27 terminald GET /api/diagnostics 200 12ms
+2026/10/30 22:29:27 terminald GET /api/diagnostics 200 10ms
+2026/10/30 22:29:28 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:28 terminald GET /api/meta 200 0s
+2026/10/30 22:29:28 terminald GET /api/health 200 0s
+2026/10/30 22:29:28 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:28 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:28 terminald GET /api/meta 200 0s
+2026/10/30 22:29:28 terminald GET /api/health 200 0s
+2026/10/30 22:29:28 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:28 terminald GET /api/meta 200 0s
+2026/10/30 22:29:28 terminald GET /api/meta 200 0s
+2026/10/30 22:29:29 terminald GET /api/actions 200 0s
+2026/10/30 22:29:29 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:29 terminald GET /api/meta 200 0s
+2026/10/30 22:29:29 terminald GET /api/actions 200 0s
+2026/10/30 22:29:29 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:29 terminald GET /api/meta 200 0s
+2026/10/30 22:29:30 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:30 terminald GET /api/meta 200 0s
+2026/10/30 22:29:30 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:30 terminald GET /api/meta 200 0s
+· terminal round-trip
+2026/10/30 22:29:31 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:31 terminald GET /api/meta 200 0s
+2026/10/30 22:29:31 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:31 terminald GET /api/meta 200 0s
+2026/10/30 22:29:32 terminald POST /api/terminal/sessions 201 1ms
+  terminal output confirmed: hx90@ssh pocket-terminal on  main [~10?2] at 22:29 ❯ echo POCKET_UI_SMOKE_$((6*7)); uname -sr; whoamiPOCKET_UI_SMOKE_42Linux 6.12.108tetsuyahx90@ssh pocket-terminal on  main [~11?2] at 22:29 ❯  
+  shot terminal-live-command-1280x800.png
+  shot terminal-split-1280x800.png
+· ssh mock flow
+2026/10/30 22:29:36 terminald GET /api/terminal/sessions/smvv0e43u_15fd1c33/stream 101 4.051s
+2026/10/30 22:29:36 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:36 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:36 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:36 terminald GET /api/meta 200 0s
+2026/10/30 22:29:36 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:36 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:36 terminald GET /api/ssh/known-hosts 200 0s
+2026/10/30 22:29:36 terminald GET /api/meta 200 0s
+  shot ssh-profiles-1280x800.png
+2026/10/30 22:29:37 terminald POST /api/ssh/profiles/pmvuzf3tz_f33cd1a5/connect 409 1ms
+  shot ssh-tofu-dialog-1280x800.png
+2026/10/30 22:29:38 terminald POST /api/ssh/profiles/pmvuzf3tz_f33cd1a5/connect 201 4ms
+2026/10/30 22:29:39 terminald GET /api/terminal/sessions/smvv0e940_27afb33f/stream 101 16ms
+  ssh output confirmed
+  shot ssh-connected-1280x800.png
+· palette + dpad
+2026/10/30 22:29:42 terminald GET /api/terminal/sessions/smvv0e940_27afb33f/stream 101 3.668s
+2026/10/30 22:29:42 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:42 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:42 terminald GET /api/actions 200 0s
+2026/10/30 22:29:42 terminald GET /api/meta 200 0s
+2026/10/30 22:29:42 terminald GET /api/health 200 0s
+2026/10/30 22:29:42 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:42 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:42 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:42 terminald GET /api/actions 200 0s
+2026/10/30 22:29:42 terminald GET /api/meta 200 0s
+2026/10/30 22:29:42 terminald GET /api/health 200 0s
+2026/10/30 22:29:42 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:42 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:42 terminald GET /api/terminal/sessions 200 0s
+  shot palette-1280x800.png
+2026/10/30 22:29:44 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:44 terminald GET /api/logs/sources 200 0s
+2026/10/30 22:29:44 terminald GET /api/logs 200 26ms
+2026/10/30 22:29:44 terminald GET /api/logs 200 26ms
+2026/10/30 22:29:45 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:45 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:45 terminald GET /api/actions 200 0s
+2026/10/30 22:29:45 terminald GET /api/meta 200 0s
+2026/10/30 22:29:45 terminald GET /api/health 200 0s
+2026/10/30 22:29:45 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:45 terminald GET /api/ssh/profiles 200 0s
+2026/10/30 22:29:45 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:45 terminald GET /api/actions 200 0s
+2026/10/30 22:29:45 terminald GET /api/meta 200 0s
+2026/10/30 22:29:45 terminald GET /api/health 200 0s
+2026/10/30 22:29:45 terminald GET /api/runtime 200 1ms
+2026/10/30 22:29:45 terminald GET /api/terminal/sessions 200 0s
+2026/10/30 22:29:45 terminald GET /api/terminal/sessions 200 0s
+  focus ring: BUTTON outline=solid 2px
+  shot dpad-focus-ring-1280x800.png
+· gamepad mapping
+  gamepad moved focus: Open terminal -> Logs
+  gamepad palette button: opened
+
+OK: no console errors, no horizontal overflow, terminal + ssh round-trips verified
+
+ALL CHECKS PASSED

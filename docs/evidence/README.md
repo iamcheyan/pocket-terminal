@@ -48,6 +48,7 @@ sessions first and never echoes ciphertext or a password).
 | `go-test.txt` | `go vet ./... && go test ./... -v` — 34 passing tests |
 | `frontend-test.txt` | `npx tsc -b && npx vitest run` — 31 passing tests across 5 files |
 | `make-test.txt` | the aggregate `make test` target (Go + typecheck + vitest) |
+| `verify.txt` | `./scripts/verify.sh --start` — the release gate: builds, boots the stack, runs both suites and the browser walk, then stops everything |
 | `ui-smoke.txt` | full headless walk: 8 pages × 2 viewports × themes, terminal round-trip, SSH TOFU flow, palette, D-Pad ring |
 
 ## Regenerating
