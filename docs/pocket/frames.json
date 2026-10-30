@@ -1,0 +1,54 @@
+{
+  "app": "dev.pocket-terminal.pocket",
+  "output": "pocket-terminal",
+  "viewport": {
+    "logical": [
+      360,
+      240
+    ],
+    "density": 2,
+    "physical": [
+      720,
+      480
+    ]
+  },
+  "frames": 130,
+  "shots": [
+    {
+      "name": "home",
+      "file": "screen-home.png",
+      "sha256": "5e403790bd8dbe3dfbadcbc85e26927b5ad1740a51b5cd7d5ed4a6ff54d48d20",
+      "bytes": 34906
+    },
+    {
+      "name": "home-focus",
+      "file": "screen-home-focus.png",
+      "sha256": "435f743234a58fefe4a83229c182fa77a5de99c52ee79db72d1558980f0e9f3f",
+      "bytes": 35012
+    },
+    {
+      "name": "detail",
+      "file": "screen-detail.png",
+      "sha256": "c11117a5159dc59730dc7c5a1ec16c0e2de0eb0aae9e3b525bb187fd14d40fb7",
+      "bytes": 32165
+    },
+    {
+      "name": "detail-action",
+      "file": "screen-detail-action.png",
+      "sha256": "1a83ee579df324a7a3df71acdd49e7be74f58d6e27edd7a6e65f1492ba09782c",
+      "bytes": 33053
+    },
+    {
+      "name": "settings",
+      "file": "screen-settings.png",
+      "sha256": "6a66597d93d07be95a98fb9f881772312e9ef3a6eea02de5da00818197bb7738",
+      "bytes": 38295
+    },
+    {
+      "name": "settings-toggled",
+      "file": "screen-settings-toggled.png",
+      "sha256": "f547ebe89a7252b358b087a46a120b989638ebbebe7ddf65f5218de89540331c",
+      "bytes": 38235
+    }
+  ]
+}

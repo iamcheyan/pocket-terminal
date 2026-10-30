@@ -1,5 +1,12 @@
 # Pocket Terminal
 
+
+> **PocketJS port (product target):** `apps/pocket-terminal/pocket/` is the
+> native PocketJS program (Solid TSX → `.pocket` → `pocket-linux-kms`). The
+> `frontend/` tree remains the frozen React design reference and is not
+> extended. Frames: `docs/pocket/`; verification:
+> `apps/pocket-terminal/POCKETJS-VERIFICATION.md`.
+
 PJOS developer console: a local terminal, SSH manager, log viewer, diagnostics panel,
 runtime inspector and command palette in one palm-sized surface.
 

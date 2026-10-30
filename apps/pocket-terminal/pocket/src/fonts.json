@@ -1,0 +1,7 @@
+{
+  "fallback": [
+    "fonts/cjk-subset.otf",
+    "fonts/nerd-subset.ttf"
+  ],
+  "characters": "端末"
+}

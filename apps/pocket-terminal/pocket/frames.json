@@ -1,0 +1,55 @@
+{
+  "frames": 130,
+  "events": [
+    {
+      "frame": 18,
+      "button": "RIGHT"
+    },
+    {
+      "frame": 34,
+      "button": "CIRCLE"
+    },
+    {
+      "frame": 52,
+      "button": "CIRCLE"
+    },
+    {
+      "frame": 72,
+      "button": "RTRIGGER"
+    },
+    {
+      "frame": 90,
+      "button": "DOWN"
+    },
+    {
+      "frame": 98,
+      "button": "CIRCLE"
+    }
+  ],
+  "captures": [
+    {
+      "frame": 10,
+      "name": "home"
+    },
+    {
+      "frame": 26,
+      "name": "home-focus"
+    },
+    {
+      "frame": 44,
+      "name": "detail"
+    },
+    {
+      "frame": 62,
+      "name": "detail-action"
+    },
+    {
+      "frame": 82,
+      "name": "settings"
+    },
+    {
+      "frame": 116,
+      "name": "settings-toggled"
+    }
+  ]
+}

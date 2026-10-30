@@ -1,0 +1,8 @@
+{
+  "name": "pocket-terminal-pocket",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@pocketjs/framework": "0.15.0"
+  }
+}

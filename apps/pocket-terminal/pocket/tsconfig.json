@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "types": [],
+    "jsx": "preserve",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "5.0",
+    "baseUrl": ".",
+    "paths": {
+      "@pocketjs/framework": [
+        "node_modules/@pocketjs/framework/framework/src/index.ts"
+      ],
+      "@pocketjs/framework/animation": [
+        "node_modules/@pocketjs/framework/framework/src/animation.ts"
+      ],
+      "@pocketjs/framework/clock": [
+        "node_modules/@pocketjs/framework/framework/src/clock.ts"
+      ],
+      "@pocketjs/framework/components": [
+        "node_modules/@pocketjs/framework/framework/src/components.ts"
+      ],
+      "@pocketjs/framework/host": [
+        "node_modules/@pocketjs/framework/framework/src/host.ts"
+      ],
+      "@pocketjs/framework/input": [
+        "node_modules/@pocketjs/framework/framework/src/input-api.ts"
+      ],
+      "@pocketjs/framework/lifecycle": [
+        "node_modules/@pocketjs/framework/framework/src/lifecycle.ts"
+      ],
+      "@pocketjs/framework/net-api": [
+        "node_modules/@pocketjs/framework/framework/src/net-api.ts"
+      ],
+      "@pocketjs/framework/solid": [
+        "node_modules/@pocketjs/framework/framework/src/index.ts"
+      ],
+      "@pocketjs/framework/solid/components": [
+        "node_modules/@pocketjs/framework/framework/src/components.ts"
+      ],
+      "*": [
+        "node_modules/@pocketjs/framework/node_modules/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
