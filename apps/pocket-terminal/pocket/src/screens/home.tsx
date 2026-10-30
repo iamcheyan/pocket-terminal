@@ -20,9 +20,9 @@ export function HomeScreen(props: {
       <MetricRow metrics={props.metrics} source={props.source} />
       <TabBar tabs={props.tabs} active={0} />
       <View class="w-full flex-1 flex-col px-[6] py-[3]">
-        <View class="w-full h-[34] flex-row items-center gap-[8] rounded-[6] px-[8] bg-slate-900">
-          <View class="w-[26] h-[26] rounded-[6] bg-emerald-800 items-center justify-center">
-            <Text class="text-sm text-emerald-200">{feature()?.badge ?? "P"}</Text>
+        <View class="w-full h-[26] flex-row items-center gap-[7] rounded-[6] px-[7] bg-slate-900">
+          <View class="w-[20] h-[20] rounded-[5px] bg-emerald-800 items-center justify-center">
+            <Text class="text-2xs text-emerald-200">{feature()?.badge ?? "P"}</Text>
           </View>
           <View class="flex-1 flex-col">
             <Text class="text-xs font-bold text-white">{feature()?.title ?? "-"}</Text>
@@ -32,11 +32,11 @@ export function HomeScreen(props: {
         </View>
         <View class="w-full h-[4]" />
         <FocusScope autoFocus>
-          <FocusGrid columns={3} wrap class="w-full flex-row flex-wrap gap-[4]">
+          <FocusGrid columns={2} wrap class="w-full flex-row flex-wrap gap-[4]">
             <For each={items()} by={(item) => item.id}>
               {(item) => (
                 <Focusable
-                  class="w-[110] h-[42] flex-col justify-center rounded-[6] px-[6] py-[3] bg-slate-900 border-slate-700 focus:bg-slate-800 focus:border-emerald-300"
+                  class="w-[166] h-[32] flex-col justify-center rounded-[6] px-[7] py-[2] bg-slate-900 border-slate-700 focus:bg-slate-800 focus:border-emerald-300"
                   onPress={() => props.onOpen(item().id)}
                 >
                   <View class="w-full flex-row items-center justify-between">
