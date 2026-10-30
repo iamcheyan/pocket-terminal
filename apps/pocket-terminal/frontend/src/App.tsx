@@ -386,7 +386,17 @@ export default function App() {
                 notify={notify}
               />
             ) : null}
-            {page === 'ssh' ? <SSHPage onConnected={onSSHConnected} notify={notify} /> : null}
+            {page === 'ssh' ? (
+              <SSHPage
+                onConnected={onSSHConnected}
+                onFocusSession={id => {
+                  setActiveSessionId(id);
+                  setPage('terminal');
+                }}
+                sessions={sessions}
+                notify={notify}
+              />
+            ) : null}
             {page === 'logs' ? <LogsPage notify={notify} /> : null}
             {page === 'diagnostics' ? <DiagnosticsPage notify={notify} /> : null}
             {page === 'runtime' ? <RuntimePage notify={notify} /> : null}

@@ -10,6 +10,7 @@ import {
   RefreshCw,
   Server,
   ShieldAlert,
+  SquareTerminal,
   ShieldCheck,
   Trash2,
   Unplug,
@@ -35,6 +36,8 @@ import {Button, Card, Chip, Dialog, Empty, Field} from '../components';
 
 export interface SSHPageProps {
   onConnected: (session: TerminalSession) => void;
+  onFocusSession: (id: string) => void;
+  sessions: TerminalSession[];
   notify: (message: string, tone?: 'info' | 'good' | 'error') => void;
 }
 
@@ -64,7 +67,7 @@ const AuthBadge = ({profile}: {profile: SSHProfile}) => {
   );
 };
 
-const SSHPage = ({onConnected, notify}: SSHPageProps) => {
+const SSHPage = ({onConnected, onFocusSession, sessions, notify}: SSHPageProps) => {
   const [bundle, setBundle] = useState<ProfileBundle | null>(null);
   const [knownHosts, setKnownHosts] = useState<KnownHost[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -93,6 +96,10 @@ const SSHPage = ({onConnected, notify}: SSHPageProps) => {
 
   const profiles = bundle?.profiles ?? [];
   const selected = profiles.find(profile => profile.id === selectedId) ?? null;
+  // Live connection state: a profile is "connected" while a running session
+  // references it. This is the daemon's truth, not a local guess.
+  const liveSessionFor = (profileId: string) =>
+    sessions.find(session => session.profileId === profileId && session.state === 'running') ?? null;
 
   const filtered = useMemo(() => {
     const needle = filter.trim().toLowerCase();
@@ -274,7 +281,11 @@ const SSHPage = ({onConnected, notify}: SSHPageProps) => {
                           </small>
                         </span>
                         {profile.mock ? <Chip tone="mock">mock</Chip> : null}
-                        {profile.lastConnectedAt ? (
+                        {liveSessionFor(profile.id) ? (
+                          <Chip tone="on">
+                            <Plug size={9} /> connected
+                          </Chip>
+                        ) : profile.lastConnectedAt ? (
                           <Chip tone="on">
                             <Check size={9} /> used
                           </Chip>
@@ -300,6 +311,16 @@ const SSHPage = ({onConnected, notify}: SSHPageProps) => {
               action={selected.mock ? <Chip tone="mock">mock=true</Chip> : null}
             >
               <dl className="kv">
+                <dt>state</dt>
+                <dd>
+                  {liveSessionFor(selected.id) ? (
+                    <span style={{color: 'var(--good)'}}>connected · session {liveSessionFor(selected.id)?.title}</span>
+                  ) : selected.lastConnectedAt ? (
+                    `idle · last connected ${selected.lastConnectedAt.slice(11, 16)} UTC`
+                  ) : (
+                    'idle · never connected'
+                  )}
+                </dd>
                 <dt>target</dt>
                 <dd>
                   {selected.user}@{selected.host}:{selected.port}
@@ -318,9 +339,22 @@ const SSHPage = ({onConnected, notify}: SSHPageProps) => {
                 ) : null}
               </dl>
               <div className="toolbar-row" style={{marginTop: 10, marginBottom: 0}}>
-                <Button variant="primary" size="sm" disabled={busy} onClick={() => void connect(selected)}>
-                  <Plug size={12} /> Connect
-                </Button>
+                {liveSessionFor(selected.id) ? (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => {
+                      const session = liveSessionFor(selected.id);
+                      if (session) onFocusSession(session.id);
+                    }}
+                  >
+                    <SquareTerminal size={12} /> Open tab
+                  </Button>
+                ) : (
+                  <Button variant="primary" size="sm" disabled={busy} onClick={() => void connect(selected)}>
+                    <Plug size={12} /> Connect
+                  </Button>
+                )}
                 <Button size="sm" disabled={busy} onClick={() => void probe(selected)}>
                   <ShieldCheck size={12} /> Test
                 </Button>

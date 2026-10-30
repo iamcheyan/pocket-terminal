@@ -75,12 +75,13 @@ const installFetch = (connectResponses: Response[]) => {
   return calls;
 };
 
-const renderPage = async () => {
+const renderPage = async (sessions: TerminalSession[] = []) => {
   const onConnected = vi.fn();
+  const onFocusSession = vi.fn();
   const notify = vi.fn();
-  render(<SSHPage onConnected={onConnected} notify={notify} />);
+  render(<SSHPage onConnected={onConnected} onFocusSession={onFocusSession} sessions={sessions} notify={notify} />);
   await waitFor(() => expect(screen.getAllByText('Mock Lab').length).toBeGreaterThan(0));
-  return {onConnected, notify};
+  return {onConnected, notify, onFocusSession};
 };
 
 describe('SSH page', () => {
@@ -137,6 +138,16 @@ describe('SSH page', () => {
     await waitFor(() => expect(notify).toHaveBeenCalled());
     expect(notify.mock.calls.some(([message]) => /connection refused/.test(String(message)))).toBe(true);
     expect(onConnected).not.toHaveBeenCalled();
+  });
+
+  it('switches to the live session instead of offering a second connect', async () => {
+    installFetch([]);
+    const {onFocusSession} = await renderPage([{...session, profileId: 'p-mock'}]);
+    const user = userEvent.setup();
+    expect(screen.getAllByText(/connected/).length).toBeGreaterThan(0);
+    await user.click(screen.getByRole('button', {name: /Open tab/}));
+    expect(onFocusSession).toHaveBeenCalledWith('s-1');
+    expect(screen.queryByRole('button', {name: /^Connect$/})).toBeNull();
   });
 
   it('opens the profile editor as a hand-drawn dialog with labelled fields', async () => {

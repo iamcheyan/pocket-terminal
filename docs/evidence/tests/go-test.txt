@@ -1,4 +1,4 @@
-$ go vet ./... && go test ./...
+$ go vet ./... && go test ./... -v
 === RUN   TestRingBufferOffsetsAndWrap
 --- PASS: TestRingBufferOffsetsAndWrap (0.00s)
 === RUN   TestRingBufferRejectsOversizedWrite
@@ -20,13 +20,13 @@ $ go vet ./... && go test ./...
 === RUN   TestTerminalSessionExecutesCommand
 --- PASS: TestTerminalSessionExecutesCommand (2.18s)
 === RUN   TestTerminalRejectsUnknownShellAndInvalidCwd
---- PASS: TestTerminalRejectsUnknownShellAndInvalidCwd (0.00s)
+--- PASS: TestTerminalRejectsUnknownShellAndInvalidCwd (0.01s)
 === RUN   TestTerminalSessionLimit
---- PASS: TestTerminalSessionLimit (8.01s)
+--- PASS: TestTerminalSessionLimit (8.02s)
 === RUN   TestSSHProfileCRUDNeverStoresPlaintext
 --- PASS: TestSSHProfileCRUDNeverStoresPlaintext (0.01s)
 === RUN   TestSSHMockConnectTOFUFlow
---- PASS: TestSSHMockConnectTOFUFlow (2.16s)
+--- PASS: TestSSHMockConnectTOFUFlow (2.19s)
 === RUN   TestSSHRejectsWrongPassword
 --- PASS: TestSSHRejectsWrongPassword (0.01s)
 === RUN   TestSSHHostKeyMismatchIsRefused
@@ -62,10 +62,10 @@ $ go vet ./... && go test ./...
 === RUN   TestLogServiceAllowlistUsesConfiguredDataDir
 --- PASS: TestLogServiceAllowlistUsesConfiguredDataDir (0.00s)
 === RUN   TestWebSocketSessionRoundTrip
---- PASS: TestWebSocketSessionRoundTrip (2.16s)
+--- PASS: TestWebSocketSessionRoundTrip (2.17s)
 === RUN   TestWebSocketRejectsForeignOrigin
 --- PASS: TestWebSocketRejectsForeignOrigin (2.01s)
 === RUN   TestWebSocketResumesFromOffset
 --- PASS: TestWebSocketResumesFromOffset (2.18s)
 PASS
-ok  	pocket-terminal/terminald	20.778s
+ok  	pocket-terminal/terminald	20.825s

@@ -1,0 +1,14 @@
+$ make test
+$ make test
+cd apps/pocket-terminal/backend/terminald && go vet ./... && go test ./...
+ok  	pocket-terminal/terminald	(cached)
+cd apps/pocket-terminal/frontend && npx tsc -b && npx vitest run
+
+ RUN  v5.0.5 /home/tetsuya/development/pocket-terminal/apps/pocket-terminal/frontend
+
+
+ Test Files  5 passed (5)
+      Tests  31 passed (31)
+   Start at  22:19:47
+   Duration  1.48s (environment 56%, tests 24%, setup 9%, import 8%, transform 1%, worker 1%)
+
