@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+apps/pocket-terminal/frontend/dist/
+apps/pocket-terminal/backend/terminald/terminald
+apps/pocket-terminal/backend/terminald/*.test
+
+# Local runtime state (never contains committed secrets)
+.state/
+*.log
+!docs/evidence/**/*.log
+
+# Editor / OS noise
+.DS_Store
+*.swp
+.vite/
+coverage/
+tsconfig.tsbuildinfo
