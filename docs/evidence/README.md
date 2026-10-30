@@ -23,11 +23,19 @@ against Chromium 152 (headless) driving the real daemon.
 | `ssh-tofu-dialog-1280x800.png` | 1 | 1280×800 | TOFU fingerprint confirmation |
 | `ssh-connected-1280x800.png` | 1 | 1280×800 | mock SSH session executing a command |
 | `palette-1280x800.png` | 1 | 1280×800 | command palette filtered by typing |
-| `dpad-focus-ring-1280x800.png` | 1 | 1280×800 | spatial focus ring after arrow-key traversal |
+| `dpad-focus-ring-1280x800.png` | 1 | 1280×800 | spatial focus ring after keyboard/gamepad traversal |
 
-Every screenshot was checked by the harness for
-`documentElement.scrollWidth === clientWidth` and `.page` non-overflow; the run
-aborts on a violation, so the presence of a file implies the check passed.
+Page set for every matrix: `home`, `terminal`, `ssh`, `logs`, `diagnostics`,
+`runtime`, `actions`, `settings`.
+
+Total: 55 PNGs — 8 desktop dark + 8 desktop light + 8 e-ink + 8 handheld dark +
+8 handheld light + 8 desktop-layout-on-phone + 7 workflow shots.
+
+Page-matrix shots come from `screenshots.mjs`, which measures each page before
+capturing; workflow shots come from `ui-smoke.mjs`, which fails the run on any
+`documentElement.scrollWidth !== clientWidth`, any `.page` overflow, any console
+error, or any unexpected HTTP ≥ 400. A committed image therefore implies the
+geometry check passed.
 
 ## API transcripts — `api/`
 
