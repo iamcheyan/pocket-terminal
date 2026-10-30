@@ -5,7 +5,7 @@ $ node scripts/ui-smoke.mjs
 · e-ink layout
 · handheld layout
 · terminal round-trip
-  terminal output confirmed: hx90@ssh pocket-terminal on  main [~9] at 22:18 ❯ echo POCKET_UI_SMOKE_$((6*7)); uname -sr; whoamiPOCKET_UI_SMOKE_42Linux 6.12.108tetsuyahx90@ssh pocket-terminal on  main [~9] at 22:18 ❯  
+  terminal output confirmed: hx90@ssh pocket-terminal on  main [~8] at 22:24 ❯ echo POCKET_UI_SMOKE_$((6*7)); uname -sr; whoamiPOCKET_UI_SMOKE_42Linux 6.12.108tetsuyahx90@ssh pocket-terminal on  main [~8] at 22:24 ❯  
   shot terminal-live-command-1280x800.png
   shot terminal-split-1280x800.png
 · ssh mock flow
@@ -15,6 +15,10 @@ $ node scripts/ui-smoke.mjs
   shot ssh-connected-1280x800.png
 · palette + dpad
   shot palette-1280x800.png
+  focus ring: BUTTON outline=solid 2px
   shot dpad-focus-ring-1280x800.png
+· gamepad mapping
+  gamepad moved focus: Open terminal -> Logs
+  gamepad palette button: opened
 
 OK: no console errors, no horizontal overflow, terminal + ssh round-trips verified

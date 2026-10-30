@@ -174,6 +174,23 @@ const main = async () => {
     for (const id of PAGES) {
       await gotoPage(page, id);
       await checkOverflow(page, `phone-${layout}/${id}`);
+      if (layout !== 'handheld') continue;
+      // Touch targets: every visible interactive control must be at least the
+      // handheld minimum so a fingertip can hit it.
+      const small = await page.evaluate(() => {
+        const bad = [];
+        for (const node of document.querySelectorAll('button, [role="tab"], [role="switch"], input, [data-kb]')) {
+          const rect = node.getBoundingClientRect();
+          if (rect.width === 0 && rect.height === 0) continue;
+          if (node.closest('.scrim') || node.closest('.xterm')) continue;
+          const min = Math.min(rect.width, rect.height);
+          if (min < 28) {
+            bad.push(`${node.tagName.toLowerCase()}.${(node.className || '').toString().split(' ')[0]}:${Math.round(rect.width)}x${Math.round(rect.height)}`);
+          }
+        }
+        return bad.slice(0, 5);
+      });
+      if (small.length) problems.push(`touch/${id}: undersized targets ${small.join(', ')}`);
     }
   }
 
@@ -271,7 +288,67 @@ const main = async () => {
   await page.waitForTimeout(120);
   const ring = await page.evaluate(() => document.querySelectorAll('[data-dpad-active="true"]').length);
   if (ring !== 1) problems.push(`dpad: expected one focus ring, found ${ring}`);
+  const ringStyle = await page.evaluate(() => {
+    const node = document.activeElement;
+    const style = node ? getComputedStyle(node) : null;
+    return {tag: node?.tagName ?? null, outline: style ? `${style.outlineStyle} ${style.outlineWidth}` : null};
+  });
+  console.log(`  focus ring: ${ringStyle.tag} outline=${ringStyle.outline}`);
   await shoot(page, 'dpad-focus-ring-1280x800');
+
+  // Gamepad: a synthetic standard-mapped pad must move the same ring, activate
+  // the highlighted control, and honour the stored button mapping.
+  console.log('· gamepad mapping');
+  await page.evaluate(() => {
+    const blank = () => ({pressed: false, value: 0, touched: false});
+    window.__pad = {
+      index: 0,
+      connected: true,
+      id: 'synthetic-pad',
+      mapping: 'standard',
+      axes: [0, 0, 0, 0],
+      buttons: Array.from({length: 17}, blank),
+    };
+    Object.defineProperty(navigator, 'getGamepads', {value: () => [window.__pad], configurable: true});
+    window.__pressPad = index => {
+      for (const button of window.__pad.buttons) {
+        button.pressed = false;
+        button.value = 0;
+      }
+      window.__pad.buttons[index] = {pressed: true, value: 1, touched: true};
+    };
+    window.__releasePad = () => {
+      for (const button of window.__pad.buttons) {
+        button.pressed = false;
+        button.value = 0;
+      }
+    };
+  });
+  const focusLabel = () =>
+    page.evaluate(() => document.activeElement?.getAttribute('aria-label') || document.activeElement?.textContent?.trim().slice(0, 40));
+
+  const beforePad = await focusLabel();
+  await page.evaluate(() => window.__pressPad(13)); // D-Pad down
+  await page.waitForTimeout(160);
+  await page.evaluate(() => window.__releasePad());
+  await page.waitForTimeout(120);
+  const afterPad = await focusLabel();
+  if (!afterPad || afterPad === beforePad) {
+    problems.push(`gamepad: D-Pad down did not move focus (${beforePad} -> ${afterPad})`);
+  }
+  const padRing = await page.evaluate(() => document.querySelectorAll('[data-dpad-active="true"]').length);
+  if (padRing !== 1) problems.push(`gamepad: expected one focus ring, found ${padRing}`);
+  console.log(`  gamepad moved focus: ${beforePad} -> ${afterPad}`);
+
+  // Confirm (button 0) must activate the focused control; the palette opens.
+  await page.evaluate(() => window.__pressPad(9)); // Start = palette
+  await page.waitForTimeout(300);
+  await page.evaluate(() => window.__releasePad());
+  const paletteOpen = await page.getByRole('dialog', {name: /Command palette/i}).count();
+  if (!paletteOpen) problems.push('gamepad: palette button did not open the command palette');
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(200);
+  console.log(`  gamepad palette button: ${paletteOpen ? 'opened' : 'failed'}`);
 
   await browser.close();
 

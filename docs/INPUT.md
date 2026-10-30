@@ -58,10 +58,18 @@ values are shown alongside.
 Palette navigation is D-Pad-native too: the palette owns `↑/↓/Enter/Esc` while
 open (page navigation is suspended), and options carry `aria-selected`.
 
+`scripts/ui-smoke.mjs` injects a synthetic standard-mapped pad and asserts three
+things: the D-Pad moves the same focus ring the keyboard uses, the palette button
+(9) opens the command palette, and exactly one element carries
+`data-dpad-active`. That is a behaviour test of the mapping code, not a
+substitute for physical hardware (see `KNOWN-LIMITS.md`).
+
 ## Touch and mouse
 
 - Base target height is 40 px; the handheld layout raises interactive controls to
-  44 px (tabs, rows, buttons).
+  44 px (tabs, rows, buttons). The headless smoke run asserts that no visible
+  control in the handheld layout at 390×844 is smaller than 28 px on either
+  axis.
 - Tap targets are the real controls, not invisible overlays; no hover-only
   affordance is required for any action.
 - Dialog dismiss works by tapping the scrim; the close button is also 32 px.
