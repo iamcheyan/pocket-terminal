@@ -1,0 +1,17 @@
+{
+  "app": "terminal",
+  "package_sha256": "604df68108ee36b7e295736f801fab5d3de5497993f758f482bd174c02abf53c",
+  "launcher_before": "16016",
+  "launcher_after": "13326",
+  "boot_sha256": "6ed41612bce1723d1eda64b5a0ee9333a105ed498b7085c03267539cf6c1b32d",
+  "frames": [
+    "home",
+    "home-focus",
+    "detail",
+    "detail-action",
+    "settings",
+    "settings-toggled"
+  ],
+  "runtime": "/mnt/sdcard/System/pocketjs/bin/pocket-linux-kms",
+  "deploy": "/storage/pjs/pocket-terminal"
+}

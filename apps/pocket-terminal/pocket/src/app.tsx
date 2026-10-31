@@ -57,6 +57,7 @@ export default function App() {
 
   onButtonPress(BTN.LTRIGGER, () => { setToast(""); setTab((tab() + 2) % 3); });
   onButtonPress(BTN.RTRIGGER, () => { setToast(""); setTab((tab() + 1) % 3); });
+  onButtonPress(BTN.START, () => { setToast(""); setTab((tab() + 1) % 3); });
   onButtonPress(BTN.CROSS, () => { if (tab() !== 0) setTab(0); });
 
   const open = (id: string) => {
